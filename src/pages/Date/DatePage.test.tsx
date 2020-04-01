@@ -1,9 +1,9 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import DatePage from "./DatePage";
+import Date from "./DatePage";
 
-test("renders Home Page", () => {
-  const { getByText } = render(<DatePage />);
-  const headElement = getByText(/Date Page/i);
-  expect(headElement).toBeInTheDocument();
+test("renders learn react link", () => {
+  const { getByText } = render(<Date />);
+  const linkElement = getByText(/learn react/i);
+  expect(linkElement).toBeInTheDocument();
 });

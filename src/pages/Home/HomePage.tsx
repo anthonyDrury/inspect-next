@@ -1,44 +1,29 @@
-import React, { useEffect, useState, ReactNode } from "react";
-import { getFiveDay } from "../../clients/server.client";
-import { FiveDayForecast, List } from "../../types/weather.types";
-import moment from "moment";
-import { isDefined } from "../../common/support";
-import { isCacheExpired } from "../../common/weatherCache";
-import { CacheName } from "../../types/cache.type";
+import React, { useEffect, useState } from "react";
 
-// displays the five day forecast
 function HomePage(): JSX.Element {
-  const [data, setData]: [FiveDayForecast | undefined, any] = useState();
-
+  const [data, setData]: any = useState();
   // Similar to componentDidMount and componentDidUpdate:
   useEffect((): void => {
-    if (!isDefined(data) || isCacheExpired(CacheName.FIVE_DAY)) {
-      // Call our fetch function below once the component mounts
-      getFiveDay("Sydney")
-        .then((res: FiveDayForecast): void => {
-          setData(res);
-        })
-        // tslint:disable-next-line: no-console
-        .catch((err: Error): void => console.log(err));
-    }
+    // Call our fetch function below once the component mounts
+    callBackendAPI()
+      .then((res: any): void => setData(res.express))
+      // tslint:disable-next-line: no-console
+      .catch((err: Error): void => console.log(err));
   });
+
+  async function callBackendAPI(): Promise<any> {
+    const response: Response = await fetch("/express_backend");
+    const body: Promise<any> = await response.json();
+
+    if (response.status !== 200) {
+      throw Error((body as any).message);
+    }
+    return body;
+  }
 
   return (
     <div className="Home">
-      <h1>Home Page</h1>
-      {`The weather in ${data?.city.name} will be:`}
-      {data?.list.map(
-        (value: List): ReactNode => {
-          return (
-            <>
-              {`${value.weather[0].description} at ${moment(
-                value.dt_txt
-              ).format("YYYY-MM-DD HH:mm A")}`}
-              <br />
-            </>
-          );
-        }
-      )}
+      <h1>Home Page {data}</h1>
     </div>
   );
 }
