@@ -4,8 +4,16 @@ import { isDefined } from "./support";
 // Google analytics functions
 // Needs to test for window as can be run without browser (test env)
 
+export function isNotTestEnv(): boolean {
+  return (
+    isDefined(process.env.ANALYTICS_KEY) &&
+    process.env.NODE_ENV !== "test" &&
+    window !== undefined
+  );
+}
+
 export function initGA(): void {
-  if (isDefined(process.env.ANALYTICS_KEY) && isDefined(ReactGA)) {
+  if (isNotTestEnv()) {
     const key: string | undefined = process.env.ANALYTICS_KEY;
     if (key !== undefined && window !== undefined) {
       ReactGA.initialize(key);
@@ -15,11 +23,7 @@ export function initGA(): void {
 }
 
 export function PageView(): void {
-  if (
-    window !== undefined &&
-    (window as any).AnalyticsInit &&
-    isDefined(ReactGA)
-  ) {
+  if (isNotTestEnv()) {
     ReactGA.pageview(window.location.pathname + window.location.search);
   }
 }
