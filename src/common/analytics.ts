@@ -6,7 +6,7 @@ import { isDefined } from "./support";
 
 export function isNotTestEnv(): boolean {
   return (
-    isDefined(process.env.ANALYTICS_KEY) &&
+    isDefined(process.env.REACT_APP_ANALYTICS_KEY) &&
     process.env.NODE_ENV !== "test" &&
     window !== undefined
   );
@@ -14,7 +14,7 @@ export function isNotTestEnv(): boolean {
 
 export function initGA(): void {
   if (isNotTestEnv()) {
-    const key: string | undefined = process.env.ANALYTICS_KEY;
+    const key: string | undefined = process.env.REACT_APP_ANALYTICS_KEY;
     if (key !== undefined && window !== undefined) {
       ReactGA.initialize(key);
       (window as any).AnalyticsInit = true;
