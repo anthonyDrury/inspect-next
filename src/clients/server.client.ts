@@ -3,7 +3,8 @@ import { getWeatherCache, cacheData } from "../common/weatherCache";
 import { CacheName, CachedObject } from "../types/cache.type";
 import { isDefined } from "../common/support";
 
-export const API_URL: string = process.env.API_URL || "http://localhost:80";
+export const API_URL: string =
+  process.env.REACT_APP_API_URL || "http://localhost:80";
 
 export async function getFiveDay(cityName: string): Promise<FiveDayForecast> {
   const weatherCache:
