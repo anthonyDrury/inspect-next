@@ -1,10 +1,8 @@
 import ReactGA from "react-ga";
+import { isDefined } from "./support";
 
 export function initGA(): void {
-  if (
-    process.env.REACT_APP_ENVIRONMENT === "dev" ||
-    process.env.REACT_APP_ENVIRONMENT === "prod"
-  ) {
+  if (isDefined(process.env.ANALYTICS_KEY)) {
     const key: string | undefined = process.env.ANALYTICS_KEY;
     if (key !== undefined) {
       ReactGA.initialize(key);
