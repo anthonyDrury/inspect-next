@@ -1,0 +1,16 @@
+.in-day-preview-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 100%;
+  border: solid 1px black;
+}
+
+.in-day-preview-item__weather-info {
+  margin-left: 0.5rem;
+  text-align: left;
+}
+
+.in-day-preview-item + .in-day-preview-item {
+  border-top: none;
+}

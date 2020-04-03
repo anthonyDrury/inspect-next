@@ -6,7 +6,7 @@ import moment from "moment";
 // Caches data into localstorage and appends a timestamp
 export function cacheData<T>(data: T, cacheType: CacheName): void {
   const cacheObj: CachedObject<T> = {
-    cachedTime: moment(),
+    cacheExpiresAt: moment().add(1, "hour"),
     data
   };
   localStorage.setItem(cacheType, JSON.stringify(cacheObj));
@@ -20,6 +20,13 @@ export function getWeatherCache<T extends CacheName>(
   const cachedItem: string | null = localStorage.getItem(cacheType);
 
   if (isDefined(cachedItem)) {
+    const expired: boolean = moment(
+      (JSON.parse(cachedItem!) as CachedReturn<T>).cacheExpiresAt
+    ).isBefore(moment());
+    if (expired) {
+      localStorage.removeItem(cacheType);
+      return undefined;
+    }
     return JSON.parse(cachedItem!) as CachedReturn<T>;
   } else {
     return undefined;
@@ -31,13 +38,11 @@ export function getWeatherCache<T extends CacheName>(
 export function isCacheExpired<T extends CacheName>(cacheType: T): boolean {
   const cachedItem: string | null = localStorage.getItem(cacheType);
   if (isDefined(cachedItem)) {
-    // If now + 1 hour is before cache time, cache is expired
-    const isAfter: boolean = moment()
-      .add(1, "hour")
-      .isBefore(
-        moment((JSON.parse(cachedItem!) as CachedReturn<T>).cachedTime)
-      );
-    return isAfter;
+    // If cache expires at time is before now, is expired.
+    const expired: boolean = moment(
+      (JSON.parse(cachedItem!) as CachedReturn<T>).cacheExpiresAt
+    ).isBefore(moment());
+    return expired;
   } else {
     return true;
   }
