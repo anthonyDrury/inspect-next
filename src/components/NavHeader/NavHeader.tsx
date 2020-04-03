@@ -1,10 +1,10 @@
 import React from "react";
 import "./NavHeader.css";
-import { location } from "../../types/location.type";
+import { Location } from "../../types/location.type";
 import { Link } from "react-router-dom";
 import { Routes } from "../../common/routes";
 
-function NavHeader(props: { location: location }): JSX.Element {
+function NavHeader(props: { location: Location }): JSX.Element {
   return (
     <div className="in-nav-header">
       <div className="in-nav-header__nav-container">

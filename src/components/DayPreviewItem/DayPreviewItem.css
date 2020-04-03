@@ -9,6 +9,7 @@
 .in-day-preview-item__weather-info {
   margin-left: 0.5rem;
   text-align: left;
+  line-height: 0.5rem;
 }
 
 .in-day-preview-item + .in-day-preview-item {
