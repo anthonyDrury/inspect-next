@@ -1,8 +1,10 @@
+// Types for use with the openWeather API
+
 export interface FiveDayForecast {
   cod: string;
   message: number;
   cnt: number;
-  list: List[];
+  list: WeatherListItem[];
   city: City;
 }
 
@@ -25,7 +27,7 @@ export interface Coord {
   lon: number;
 }
 
-export interface List {
+export interface WeatherListItem {
   dt: number;
   main: Main;
   weather: WeatherElement[];

@@ -7,7 +7,7 @@ export enum CacheName {
 }
 
 export interface CachedObject<T> {
-  cachedTime: Moment;
+  cacheExpiresAt: Moment;
   data: T;
 }
 

@@ -4,6 +4,6 @@ import HomePage from "./HomePage";
 
 test("renders Home Page", () => {
   const { getByText } = render(<HomePage />);
-  const headElement = getByText(/Home Page/i);
+  const headElement = getByText(/Five Day/i);
   expect(headElement).toBeInTheDocument();
 });

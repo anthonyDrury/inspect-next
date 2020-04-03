@@ -1,10 +1,10 @@
-import React, { useEffect, useState, ReactNode } from "react";
+import React, { useEffect, useState } from "react";
 import { getFiveDay } from "../../clients/server.client";
-import { FiveDayForecast, List } from "../../types/weather.types";
-import moment from "moment";
+import { FiveDayForecast } from "../../types/weather.types";
 import { isDefined } from "../../common/support";
 import { isCacheExpired } from "../../common/weatherCache";
 import { CacheName } from "../../types/cache.type";
+import DayPreviewList from "../../components/DayPreviewList/DayPreviewList";
 
 // displays the five day forecast
 function HomePage(): JSX.Element {
@@ -24,21 +24,9 @@ function HomePage(): JSX.Element {
   });
 
   return (
-    <div className="Home">
-      <h1>Home Page</h1>
-      {`The weather in ${data?.city.name} will be:`}
-      {data?.list.map(
-        (value: List): ReactNode => {
-          return (
-            <>
-              {`${value.weather[0].description} at ${moment(
-                value.dt_txt
-              ).format("YYYY-MM-DD HH:mm A")}`}
-              <br />
-            </>
-          );
-        }
-      )}
+    <div className="in-home">
+      <h1>Five Day Forecast for {data?.city.name}</h1>
+      {data?.list ? <DayPreviewList list={data.list}></DayPreviewList> : null}
     </div>
   );
 }

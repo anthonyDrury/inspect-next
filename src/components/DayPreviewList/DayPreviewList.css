@@ -1,0 +1,4 @@
+.in-day-preview-list {
+  display: flex;
+  flex-wrap: wrap;
+}
