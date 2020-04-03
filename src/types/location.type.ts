@@ -1,4 +1,4 @@
-export type location = {
+export type Location = {
   cityName: string;
   zipCode?: string;
 };

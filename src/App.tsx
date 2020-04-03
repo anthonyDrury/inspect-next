@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, Dispatch } from "react";
 import "./App.css";
 import "./styles/Typography.css";
 import { Switch, Route, Router } from "react-router-dom";
@@ -8,8 +8,20 @@ import { Routes } from "./common/routes";
 import DatePage from "./pages/Date/DatePage";
 import { initGA, PageView } from "./common/analytics";
 import NavHeader from "./components/NavHeader/NavHeader";
+import { connect } from "react-redux";
+import { State, Action } from "./types/redux.types";
+import { updateFiveDayForecast } from "./redux/actions/weather.actions";
+import { getFiveDay } from "./clients/server.client";
 
-function App(): JSX.Element {
+type AppProps = {
+  updateFiveDayForecast?: () => Dispatch<Action>;
+  state?: State;
+};
+function App(props?: AppProps): JSX.Element {
+  if (props !== undefined && props.state !== undefined) {
+    getFiveDay(props.state.location?.cityName);
+  }
+
   useEffect((): void => {
     initGA();
     PageView();
@@ -19,7 +31,13 @@ function App(): JSX.Element {
   return (
     <div className="in-app">
       <Router history={history}>
-        <NavHeader location={{ cityName: "Sydney" }}></NavHeader>
+        <NavHeader
+          location={
+            props !== undefined && props.state !== undefined
+              ? props.state.location
+              : (null as any)
+          }
+        ></NavHeader>
         <Switch>
           <Route exact path={Routes.HOME}>
             <HomePage></HomePage>
@@ -33,4 +51,15 @@ function App(): JSX.Element {
   );
 }
 
-export default App;
+function mapStateToProps(state: State): Partial<AppProps> {
+  return { state };
+}
+
+function mapDispatchToProps(dispatch: Dispatch<Action>): any {
+  return {
+    updateFiveDayForecast: (): void =>
+      dispatch(updateFiveDayForecast({} as any))
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
