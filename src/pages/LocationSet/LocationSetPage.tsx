@@ -18,12 +18,18 @@ export interface LocationSetProps extends RouteComponentProps<Location> {
 // displays the five day forecast
 function LocationSetPage(props?: LocationSetProps): JSX.Element {
   useEffect((): void => {
-    if (!doesStateMatchRoute(props?.match.params, props?.state?.location)) {
+    if (
+      !doesStateMatchRoute(
+        props?.match.params,
+        props?.state?.fiveDayLocationFor
+      )
+    ) {
+      console.table(props?.match);
       const safeParams: Location | undefined = mapFromUrlSafeLocation(
         props?.match.params
       );
 
-      if (props?.updateLocation !== undefined) {
+      if (props?.updateLocation !== undefined && !props.state?.loading) {
         props.updateLocation(safeParams);
         if (safeParams !== undefined) {
           getFiveDay(safeParams);

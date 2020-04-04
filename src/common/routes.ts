@@ -7,6 +7,7 @@ export enum Routes {
   FIVE_DAY = "/:cityName/:countryName",
   MONTHLY = "/monthly",
   SETTINGS = "/settings",
+  LOCATION_NOT_FOUND = "/location-not-found",
 }
 
 // Used to encode city/country names for use in URL
