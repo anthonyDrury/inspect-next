@@ -1,18 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 import "./DayPreviewList.css";
 import { WeatherListItem } from "../../types/weather.types";
-import moment from "moment";
+import moment, { Moment } from "moment";
 import DayPreviewItem from "../DayPreviewItem/DayPreviewItem";
 
-function DayPreviewList(props: { list: WeatherListItem[] }): JSX.Element {
-  const [listState]: [
-    Map<string, Map<string, WeatherListItem>>,
-    any
-  ] = useState(mapListToWeatherMap(props.list));
+function DayPreviewList(props: {
+  list: WeatherListItem[];
+  cacheTime: moment.Moment;
+}): JSX.Element {
+  const [listState, setState]: [
+    {
+      weatherMap: Map<string, Map<string, WeatherListItem>>;
+      cacheTime: Moment;
+    },
+    Dispatch<
+      SetStateAction<{
+        weatherMap: Map<string, Map<string, WeatherListItem>>;
+        cacheTime: Moment;
+      }>
+    >
+  ] = useState({
+    weatherMap: mapListToWeatherMap(props.list),
+    cacheTime: props.cacheTime,
+  });
 
-  // useEffect((): void => {
-  //   sortListByDay();
-  // });
+  useEffect((): void => {
+    if (listState.cacheTime.toString() !== props.cacheTime.toString()) {
+      setState({
+        weatherMap: mapListToWeatherMap(props.list),
+        cacheTime: props.cacheTime,
+      });
+    }
+  }, [listState.cacheTime, props.cacheTime, props.list]);
 
   function mapListToWeatherMap(
     list: WeatherListItem[]
@@ -40,7 +59,7 @@ function DayPreviewList(props: { list: WeatherListItem[] }): JSX.Element {
 
   return (
     <div className="in-day-preview-list">
-      {Array.from(listState.values()).map(
+      {Array.from(listState.weatherMap.values()).map(
         (hour: Map<string, WeatherListItem>, index: number): JSX.Element => {
           return (
             <DayPreviewItem
