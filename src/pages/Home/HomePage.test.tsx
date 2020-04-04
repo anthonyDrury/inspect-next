@@ -10,6 +10,6 @@ test("renders Home Page", () => {
       <HomePage />
     </Provider>
   );
-  const headElement = getByText(/Five Day/i);
+  const headElement = getByText(/Home Page/i);
   expect(headElement).toBeInTheDocument();
 });

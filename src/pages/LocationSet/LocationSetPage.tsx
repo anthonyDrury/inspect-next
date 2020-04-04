@@ -24,7 +24,6 @@ function LocationSetPage(props?: LocationSetProps): JSX.Element {
         props?.state?.fiveDayLocationFor
       )
     ) {
-      console.table(props?.match);
       const safeParams: Location | undefined = mapFromUrlSafeLocation(
         props?.match.params
       );
