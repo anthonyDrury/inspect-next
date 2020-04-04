@@ -1,29 +1,58 @@
 import { FiveDayForecast } from "../types/weather.types";
-import { isExpired } from "../common/support";
+import { isExpired, locationSetForDifferent } from "../common/support";
 import store from "../redux/store/store";
 import { updateFiveDayForecast } from "../redux/actions/weather.actions";
 import { updateLoading } from "../redux/actions/loading.actions";
 import { State } from "../types/redux.types";
+import { AutocompleteResponse, Prediction } from "../types/google.type";
+import { AutocompleteOption, Location } from "../types/location.type";
 
 export const API_URL: string =
   process.env.REACT_APP_API_URL || "http://localhost:80";
 
-export async function getFiveDay(cityName: string): Promise<void> {
+export async function getFiveDay(location: Location): Promise<void> {
   const state: State = store.getState();
-  if (isExpired(state.fiveDayExpiresAt) && !state.loading) {
+  if (
+    (isExpired(state.fiveDayExpiresAt) ||
+      !locationSetForDifferent(location, state.fiveDayLocationFor)) &&
+    !state.loading
+  ) {
     store.dispatch(updateLoading(true));
     const response: Response = await fetch(
-      `${API_URL}/fiveDay?cityName=${cityName}`
+      `${API_URL}/fiveDay?cityName=${location.cityName}`
     );
     const body: Promise<FiveDayForecast> = response.json();
 
+    // TO DO, catch this
     if (response.status !== 200) {
       throw Error((body as any).message);
     }
 
     await body.then((data: FiveDayForecast): void => {
-      store.dispatch(updateFiveDayForecast(data));
+      store.dispatch(updateFiveDayForecast(data, location));
       store.dispatch(updateLoading(false));
     });
   }
+}
+
+export async function getAutocomplete(
+  input: string,
+  sessionId: string
+): Promise<AutocompleteOption[]> {
+  const response: Response = await fetch(
+    `${API_URL}/autocomplete?input=${input}&session=${sessionId}`
+  );
+  const body: Promise<AutocompleteResponse> = response.json();
+
+  if (response.status !== 200) {
+    throw Error((body as any).message);
+  }
+
+  return body.then((data: AutocompleteResponse): AutocompleteOption[] => {
+    return data.predictions.map(
+      (value: Prediction): AutocompleteOption => {
+        return { description: value.description, terms: value.terms };
+      }
+    );
+  });
 }

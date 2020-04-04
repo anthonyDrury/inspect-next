@@ -3,25 +3,19 @@ import "./App.css";
 import "./styles/Typography.css";
 import { Switch, Route, Router } from "react-router-dom";
 import { createBrowserHistory, History } from "history";
-import HomePage from "./pages/Home/HomePage";
 import { Routes } from "./common/routes";
 import DatePage from "./pages/Date/DatePage";
 import { initGA, PageView } from "./common/analytics";
 import NavHeader from "./components/NavHeader/NavHeader";
-import { connect } from "react-redux";
 import { State, Action } from "./types/redux.types";
-import { updateFiveDayForecast } from "./redux/actions/weather.actions";
-import { getFiveDay } from "./clients/server.client";
+import CityInput from "./components/CityInput/CityInput";
+import LocationSetPage from "./pages/LocationSet/LocationSetPage";
 
 type AppProps = {
   updateFiveDayForecast?: () => Dispatch<Action>;
   state?: State;
 };
 function App(props?: AppProps): JSX.Element {
-  if (props !== undefined && props.state !== undefined) {
-    getFiveDay(props.state.location?.cityName);
-  }
-
   useEffect((): void => {
     initGA();
     PageView();
@@ -31,16 +25,11 @@ function App(props?: AppProps): JSX.Element {
   return (
     <div className="in-app">
       <Router history={history}>
-        <NavHeader
-          location={
-            props !== undefined && props.state !== undefined
-              ? props.state.location
-              : (null as any)
-          }
-        ></NavHeader>
+        <NavHeader></NavHeader>
+        <CityInput></CityInput>
         <Switch>
-          <Route exact path={Routes.HOME}>
-            <HomePage></HomePage>
+          <Route exact path={Routes.FIVE_DAY}>
+            <LocationSetPage />
           </Route>
           <Route path={Routes.DATE}>
             <DatePage></DatePage>
@@ -51,15 +40,4 @@ function App(props?: AppProps): JSX.Element {
   );
 }
 
-function mapStateToProps(state: State): Partial<AppProps> {
-  return { state };
-}
-
-function mapDispatchToProps(dispatch: Dispatch<Action>): any {
-  return {
-    updateFiveDayForecast: (): void =>
-      dispatch(updateFiveDayForecast({} as any))
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;
