@@ -10,6 +10,7 @@ import NavHeader from "./components/NavHeader/NavHeader";
 import { State, Action } from "./types/redux.types";
 import CityInput from "./components/CityInput/CityInput";
 import LocationSetPage from "./pages/LocationSet/LocationSetPage";
+import LocationNotFoundPage from "./pages/locationNotFound/LocationNotFoundPage";
 
 type AppProps = {
   updateFiveDayForecast?: () => Dispatch<Action>;
@@ -28,11 +29,17 @@ function App(props?: AppProps): JSX.Element {
         <NavHeader></NavHeader>
         <CityInput></CityInput>
         <Switch>
+          <Route exact path={Routes.HOME}>
+            <p>home</p>
+          </Route>
           <Route exact path={Routes.FIVE_DAY}>
             <LocationSetPage />
           </Route>
-          <Route path={Routes.DATE}>
+          <Route exact path={Routes.DATE}>
             <DatePage></DatePage>
+          </Route>
+          <Route exact path={Routes.LOCATION_NOT_FOUND}>
+            <LocationNotFoundPage></LocationNotFoundPage>
           </Route>
         </Switch>
       </Router>

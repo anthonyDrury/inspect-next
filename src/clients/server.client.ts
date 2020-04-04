@@ -6,6 +6,7 @@ import { updateLoading } from "../redux/actions/loading.actions";
 import { State } from "../types/redux.types";
 import { AutocompleteResponse, Prediction } from "../types/google.type";
 import { AutocompleteOption, Location } from "../types/location.type";
+import { Routes } from "../common/routes";
 
 export const API_URL: string =
   process.env.REACT_APP_API_URL || "http://localhost:80";
@@ -23,8 +24,10 @@ export async function getFiveDay(location: Location): Promise<void> {
     );
     const body: Promise<FiveDayForecast> = response.json();
 
-    // TO DO, catch this
+    // Typically means openWeather does not have the city
     if (response.status !== 200) {
+      window.location.href = Routes.LOCATION_NOT_FOUND;
+      store.dispatch(updateLoading(false));
       throw Error((body as any).message);
     }
 

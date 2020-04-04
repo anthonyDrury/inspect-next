@@ -61,7 +61,6 @@ function CityInput(props?: CityProps): JSX.Element {
         getOptionLabel={(option: AutocompleteOption): string =>
           option.description
         }
-        placeholder={`${props?.state?.location?.cityName}, ${props?.state?.location?.countryName}`}
         style={{ width: 300 }}
         multiple={undefined}
         onInputChange={(e: React.ChangeEvent<{}>): void => {
