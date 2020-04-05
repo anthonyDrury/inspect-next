@@ -1,0 +1,48 @@
+@import "../../styles/Breakpoints.scss";
+
+.in-day-preview-item {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  align-items: center;
+  flex: 100% 1;
+  border: solid 1px black;
+
+  @include respond-to("mobile") {
+    margin: 0 auto;
+    max-width: 20rem;
+  }
+
+  &__weather-info {
+    margin-left: 0.5rem;
+    text-align: left;
+    line-height: 0.5rem;
+  }
+
+  & + .in-day-preview-item {
+    border-top: none;
+  }
+
+  &__preview {
+    display: flex;
+    align-self: flex-end;
+    margin-right: 0.5rem;
+    text-align: left;
+    flex: 1;
+    justify-content: flex-end;
+
+    @include respond-to("mobile") {
+      justify-content: flex-start;
+      flex: 0;
+    }
+
+    &-container {
+      line-height: 0.5rem;
+
+      white-space: nowrap;
+      & + .in-day-preview-item__preview-container {
+        margin-left: 0.5rem;
+      }
+    }
+  }
+}

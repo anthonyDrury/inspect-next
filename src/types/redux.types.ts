@@ -1,5 +1,5 @@
 import { Location } from "./location.type";
-import { FiveDayForecast } from "./weather.types";
+import { FiveDayForecast } from "./openWeather.types";
 import { Moment } from "moment";
 
 export type State = {

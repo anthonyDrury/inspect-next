@@ -33,6 +33,8 @@ export interface WeatherListItem {
   weather: WeatherElement[];
   clouds: Clouds;
   wind: Wind;
+  rain?: Rain;
+  snow?: Snow;
   sys: Sys;
   dt_txt: Date;
 }
@@ -67,6 +69,14 @@ export interface WeatherElement {
 export interface Wind {
   speed: number;
   deg: number;
+}
+
+export interface Rain {
+  ["3h"]: number;
+}
+
+export interface Snow {
+  ["3h"]: number;
 }
 
 export type ForecastTypes = FiveDayForecast | CurrentForecast;

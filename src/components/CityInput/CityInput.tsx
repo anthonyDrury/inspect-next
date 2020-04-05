@@ -10,11 +10,14 @@ import { updateLocation } from "../../redux/actions/location.actions";
 import { State, Action } from "../../types/redux.types";
 import { Location } from "../../types/location.type";
 import { connect } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 type CityInputState = {
   options: AutocompleteOption[];
   uuid: string;
   route?: string;
+  inputDisplayed: boolean;
 };
 type CityProps = {
   updateLocation?: (d: Location | undefined) => void;
@@ -24,12 +27,17 @@ function CityInput(props?: CityProps): JSX.Element {
   const [state, setState]: [
     CityInputState,
     Dispatch<SetStateAction<CityInputState>>
-  ] = useState({ options: [] as AutocompleteOption[], uuid: getUuid() });
+  ] = useState({
+    options: [] as AutocompleteOption[],
+    uuid: getUuid(),
+    inputDisplayed: false as boolean,
+  });
 
   async function getInputOnChange(input: string): Promise<void> {
     setState({
       options: await getAutocomplete(input, state.uuid),
       uuid: state.uuid,
+      inputDisplayed: true,
     });
   }
 
@@ -53,32 +61,50 @@ function CityInput(props?: CityProps): JSX.Element {
 
   return (
     <>
-      {state.route ? <Redirect to={state.route} /> : null}
-      <Autocomplete
-        className="in-city-input"
-        id="city-input"
-        options={state.options}
-        getOptionLabel={(option: AutocompleteOption): string =>
-          option.description
-        }
-        style={{ width: 300 }}
-        multiple={undefined}
-        onInputChange={(e: React.ChangeEvent<{}>): void => {
-          getInputOnChange((e.target as any).value);
-        }}
-        onChange={(
-          event: React.ChangeEvent<{}>,
-          value: AutocompleteOption | null
-        ): void => submitOnSelect(value)}
-        renderInput={(params: RenderInputParams): JSX.Element => (
-          <TextField
-            {...params}
-            label="Select city"
-            color="secondary"
-            variant="filled"
+      {!state.inputDisplayed ? (
+        <div
+          style={{ cursor: "pointer" }}
+          onClick={(): void => setState({ ...state, inputDisplayed: true })}
+        >
+          Find a city &nbsp;
+          <FontAwesomeIcon icon={faSearch} />
+        </div>
+      ) : (
+        <>
+          {state.route ? <Redirect to={state.route} /> : null}
+          <Autocomplete
+            className="in-city-input"
+            id="city-input"
+            options={state.options}
+            getOptionLabel={(option: AutocompleteOption): string =>
+              option.description
+            }
+            onFocusCapture={(e: any) => {
+              setState({
+                inputDisplayed: (e.target as any).value as boolean,
+                ...state,
+              });
+            }}
+            style={{ width: 300 }}
+            multiple={undefined}
+            onInputChange={(e: React.ChangeEvent<{}>): void => {
+              getInputOnChange((e.target as any).value);
+            }}
+            onChange={(
+              event: React.ChangeEvent<{}>,
+              value: AutocompleteOption | null
+            ): void => submitOnSelect(value)}
+            renderInput={(params: RenderInputParams): JSX.Element => (
+              <TextField
+                {...params}
+                label="Select city"
+                color="secondary"
+                variant="filled"
+              />
+            )}
           />
-        )}
-      />
+        </>
+      )}
     </>
   );
 }

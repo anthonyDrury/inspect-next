@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 import "./DayPreviewList.css";
-import { WeatherListItem } from "../../types/weather.types";
+import { WeatherListItem } from "../../types/openWeather.types";
 import moment, { Moment } from "moment";
 import DayPreviewItem from "../DayPreviewItem/DayPreviewItem";
 
