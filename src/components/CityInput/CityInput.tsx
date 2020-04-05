@@ -71,7 +71,12 @@ function CityInput(props?: CityProps): JSX.Element {
           value: AutocompleteOption | null
         ): void => submitOnSelect(value)}
         renderInput={(params: RenderInputParams): JSX.Element => (
-          <TextField {...params} label="Select city" variant="filled" />
+          <TextField
+            {...params}
+            label="Select city"
+            color="secondary"
+            variant="filled"
+          />
         )}
       />
     </>

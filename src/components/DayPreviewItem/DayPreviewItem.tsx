@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import "./DayPreviewItem.css";
 import { WeatherListItem } from "../../types/weather.types";
 import moment from "moment";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCloud } from "@fortawesome/free-solid-svg-icons";
 import { kelvinToCelsius } from "../../common/support";
 
 function DayPreviewItem(props: { hourList: WeatherListItem[] }): JSX.Element {
@@ -34,13 +32,16 @@ function DayPreviewItem(props: { hourList: WeatherListItem[] }): JSX.Element {
     });
     setState({
       minTemp: kelvinToCelsius(minMaxArr[0]),
-      maxTemp: kelvinToCelsius(minMaxArr[1])
+      maxTemp: kelvinToCelsius(minMaxArr[1]),
     });
   }
 
   return (
     <div className="in-day-preview-item">
-      <FontAwesomeIcon icon={faCloud} size="6x" />
+      <img
+        src={`http://openweathermap.org/img/wn/${props.hourList[0]?.weather[0]?.icon}@2x.png`}
+        alt="weather icon"
+      ></img>
       <div className="in-day-preview-item__weather-info">
         <p className="in-text--extra-large">
           {moment(props.hourList[0].dt_txt).format("dddd")}
@@ -51,6 +52,34 @@ function DayPreviewItem(props: { hourList: WeatherListItem[] }): JSX.Element {
         <p className="in-text--large">
           {state.minTemp}° - {state.maxTemp}°
         </p>
+      </div>
+      <div className="in-day-preview-item__preview">
+        {/* TO DO: change deg into arrow pointing direction */}
+        {/* TO DO: convert metric to settings (metric/imperial) */}
+
+        {props.hourList[2] !== undefined || props.hourList[4] !== undefined ? (
+          <>
+            <div className="in-day-preview-item__preview-container">
+              <p>&nbsp;</p>
+              <p>wind:</p>
+              <p> humidity:</p>
+            </div>
+            {props.hourList[2] !== undefined ? (
+              <div className="in-day-preview-item__preview-container">
+                <p>9AM</p>
+                <p>{`${props.hourList[2]?.wind.deg}° ${props.hourList[2]?.wind.speed} M/S`}</p>
+                <p>{`${props.hourList[2]?.main.humidity}`}</p>
+              </div>
+            ) : null}
+            {props.hourList[4] !== undefined ? (
+              <div className="in-day-preview-item__preview-container">
+                <p>3PM</p>
+                <p>{`${props.hourList[4]?.wind.deg}° ${props.hourList[4]?.wind.speed} M/S`}</p>
+                <p>{`${props.hourList[4]?.main.humidity}`}</p>
+              </div>
+            ) : null}
+          </>
+        ) : null}
       </div>
     </div>
   );

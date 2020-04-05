@@ -3,7 +3,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import { fade, makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import CityInput from "../CityInput/CityInput";
 
 const useStyles = makeStyles((theme) => ({
@@ -20,20 +20,6 @@ const useStyles = makeStyles((theme) => ({
       display: "block",
     },
     textAlign: "left",
-  },
-  search: {
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    "&:hover": {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
-    marginLeft: 0,
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(1),
-      width: "auto",
-    },
   },
 }));
 
@@ -53,7 +39,7 @@ export default function NavHeader() {
           <Typography className={classes.title} variant="h6" noWrap>
             Inspect Next
           </Typography>
-          <div className={classes.search}>
+          <div>
             <CityInput />
           </div>
         </Toolbar>
