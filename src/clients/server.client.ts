@@ -1,4 +1,4 @@
-import { FiveDayForecast } from "../types/weather.types";
+import { FiveDayForecast } from "../types/openWeather.types";
 import { isExpired, locationSetForDifferent } from "../common/support";
 import store from "../redux/store/store";
 import { updateFiveDayForecast } from "../redux/actions/weather.actions";

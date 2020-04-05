@@ -1,4 +1,4 @@
-import { FiveDayForecast } from "../../types/weather.types";
+import { FiveDayForecast } from "../../types/openWeather.types";
 import { Action } from "../../types/redux.types";
 import moment from "moment";
 import { Location } from "../../types/location.type";

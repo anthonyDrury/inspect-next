@@ -8,7 +8,6 @@ import DatePage from "./pages/Date/DatePage";
 import { initGA, PageView } from "./common/analytics";
 import NavHeader from "./components/NavHeader/NavHeader";
 import { State, Action } from "./types/redux.types";
-import CityInput from "./components/CityInput/CityInput";
 import LocationSetPage from "./pages/LocationSet/LocationSetPage";
 import LocationNotFoundPage from "./pages/locationNotFound/LocationNotFoundPage";
 import { ThemeProvider, createMuiTheme, Theme } from "@material-ui/core";
@@ -36,7 +35,6 @@ function App(props?: AppProps): JSX.Element {
       <Router history={history}>
         <ThemeProvider theme={theme}>
           <NavHeader></NavHeader>
-          <CityInput></CityInput>
           <Switch>
             <Route exact path={Routes.HOME}>
               <p>home</p>

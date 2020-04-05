@@ -1,0 +1,34 @@
+$breakpoints: (
+  "mobile": 414px,
+  "tablet": 834px,
+) !default;
+
+/// Mixin to manage responsive breakpoints
+/// @author Hugo Giraudel
+/// @param {String} $breakpoint - Breakpoint name
+/// @require $breakpoints
+@mixin respond-to($breakpoint) {
+  // If the key exists in the map
+  @if map-has-key($breakpoints, $breakpoint) {
+    // Prints a media query based on the value
+    @media (max-width: map-get($breakpoints, $breakpoint)) {
+      @content;
+    }
+  }
+
+  // If the key doesn't exist in the map
+  @else {
+    @warn "Unfortunately, no value could be retrieved from `#{$breakpoint}`. "
+        + "Available breakpoints are: #{map-keys($breakpoints)}.";
+  }
+}
+
+// Mobile portait (320px to 414px)
+// For devices with 4" to 6.9" screens.
+
+// Tablet portait (768px to 834px)
+// For devices 7" to 10"
+
+// Laptop & desktop displays (1200px+)
+// Varies a lot, but is usually 1200px and above
+// https://ricostacruz.com/til/css-media-query-breakpoints
