@@ -8,7 +8,6 @@
     flex: 100%;
     align-self: center;
     flex-direction: column;
-    line-height: 0.5rem;
     padding: 0.5rem;
   }
 
@@ -24,6 +23,7 @@
   &__preview-container {
     line-height: 0.5rem;
     white-space: nowrap;
+    text-align: left;
 
     & + .in-day-preview-item__preview-container {
       margin-left: 0.5rem;
