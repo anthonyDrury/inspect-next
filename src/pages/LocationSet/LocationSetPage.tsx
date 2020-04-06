@@ -44,6 +44,9 @@ function LocationSetPage(props?: LocationSetProps): JSX.Element {
         <DayPreviewList
           list={props?.state.fiveDayForecast.list}
           cacheTime={props?.state.fiveDayExpiresAt}
+          weatherConditions={props?.state.weatherConditions}
+          sunsetTime={props?.state.fiveDayForecast.city.sunset}
+          sunriseTime={props?.state.fiveDayForecast.city.sunrise}
         ></DayPreviewList>
       ) : null}
     </div>

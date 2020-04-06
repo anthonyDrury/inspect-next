@@ -1,7 +1,11 @@
 import moment, { Moment } from "moment";
 import { Location } from "../types/location.type";
 import { WeatherListItem } from "../types/openWeather.types";
-import { WeatherPreviewType } from "../types/weather.type";
+import {
+  WeatherPreviewType,
+  ViableWeather,
+  WeatherInspectionVariables,
+} from "../types/weather.type";
 
 export function isDefined(x: any | undefined | null): boolean {
   return x !== undefined && x !== null;
@@ -45,7 +49,10 @@ export function locationSetForDifferent(
 }
 
 export function getWeatherInfo(
-  weatherList: WeatherListItem[]
+  weatherList: WeatherListItem[],
+  weatherVars: WeatherInspectionVariables,
+  sunriseTime: number,
+  sunsetTime: number
 ): WeatherPreviewType {
   // [min, max]
   const minMaxArr: [number, number] = [999, -999];
@@ -75,14 +82,97 @@ export function getWeatherInfo(
     }
   });
 
+  const viableTypes: ViableWeather = getViableWeatherSlots(
+    weatherList,
+    weatherVars,
+    sunriseTime,
+    sunsetTime
+  );
+
   return {
     minTemp: kelvinToCelsius(minMaxArr[0]),
     maxTemp: kelvinToCelsius(minMaxArr[1]),
     rainAmount: Number(rainAmount.toFixed(0)),
     snowAmount: Number(snowAmount.toFixed(0)),
-    isViable: false,
+    isViable: viableTypes.isOptimal || viableTypes.isViable,
     threePM: three,
     nineAM: nine,
     defaultWeather: nine !== undefined ? nine : weatherList[0],
+    viableTypes,
   };
+}
+
+export function isWeatherViable(
+  weatherItem: WeatherListItem,
+  weatherVars: WeatherInspectionVariables,
+  sunriseTime: number,
+  sunsetTime: number
+): boolean {
+  const sunrise: number = moment(sunriseTime * 1000).hours();
+  const sunset: number = moment(sunsetTime * 1000).hours();
+  const isDaylight: boolean =
+    moment(weatherItem.dt_txt).hours() >= sunrise &&
+    moment(weatherItem.dt_txt).hours() < sunset;
+  const isRainViable: boolean =
+    weatherItem.rain === undefined ||
+    weatherItem.rain["3h"] <= weatherVars.viaRainMax;
+  const isTempViable: boolean =
+    weatherItem.main.temp >= weatherVars.viaTempMin &&
+    weatherItem.main.temp <= weatherVars.viaTempMax;
+  const isWindViable: boolean =
+    weatherItem.wind.speed <= weatherVars.viaWindMax;
+
+  return isDaylight && isRainViable && isTempViable && isWindViable;
+}
+
+export function isWeatherOptimal(
+  weatherItem: WeatherListItem,
+  weatherVars: WeatherInspectionVariables,
+  sunriseTime: number,
+  sunsetTime: number
+): boolean {
+  const sunrise: number = moment(sunriseTime * 1000).hours();
+  const sunset: number = moment(sunsetTime * 1000).hours();
+  const isDaylight: boolean =
+    moment(weatherItem.dt_txt).hours() >= sunrise &&
+    moment(weatherItem.dt_txt).hours() < sunset;
+  const isRainOptimal: boolean =
+    weatherItem.rain === undefined ||
+    weatherItem.rain["3h"] <= weatherVars.optRainMax;
+  const isTempOptimal: boolean =
+    weatherItem.main.temp >= weatherVars.optTempMin &&
+    weatherItem.main.temp <= weatherVars.optTempMax;
+  const isWindOptimal: boolean =
+    weatherItem.wind.speed <= weatherVars.optWindMax;
+
+  return isDaylight && isRainOptimal && isTempOptimal && isWindOptimal;
+}
+
+export function getViableWeatherSlots(
+  weatherList: WeatherListItem[],
+  weatherVars: WeatherInspectionVariables,
+
+  sunriseTime: number,
+  sunsetTime: number
+): ViableWeather {
+  const inspectObj: ViableWeather = {
+    viableTimes: [],
+    optimalTimes: [],
+    isViable: false,
+    isOptimal: false,
+  };
+
+  weatherList.forEach((listItem: WeatherListItem): void => {
+    if (isWeatherOptimal(listItem, weatherVars, sunriseTime, sunsetTime)) {
+      inspectObj.optimalTimes.push(listItem);
+      inspectObj.isOptimal = true;
+    } else if (
+      isWeatherViable(listItem, weatherVars, sunriseTime, sunsetTime)
+    ) {
+      inspectObj.viableTimes.push(listItem);
+      inspectObj.isViable = true;
+    }
+  });
+
+  return inspectObj;
 }
