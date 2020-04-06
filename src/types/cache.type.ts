@@ -1,13 +1,13 @@
-import { FiveDayForecast, CurrentForecast } from "./weather.types";
+import { FiveDayForecast, CurrentForecast } from "./openWeather.types";
 import { Moment } from "moment";
 
 export enum CacheName {
   FIVE_DAY = "fiveDay",
-  CURRENT = "current"
+  CURRENT = "current",
 }
 
 export interface CachedObject<T> {
-  cachedTime: Moment;
+  cacheExpiresAt: Moment;
   data: T;
 }
 

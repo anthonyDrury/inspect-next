@@ -1,0 +1,6 @@
+.in-day-preview-list {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 40rem;
+  margin: 0 auto;
+}
