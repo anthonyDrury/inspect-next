@@ -1,18 +1,19 @@
 import moment, { Moment } from "moment";
-import { Location } from "../types/location.type";
+import { Location, CountryID } from "../types/location.type";
 import { WeatherListItem } from "../types/openWeather.types";
 import {
   WeatherPreviewType,
   ViableWeather,
   WeatherInspectionVariables,
 } from "../types/weather.type";
+import { countries } from "./constant";
 
 export function isDefined(x: any | undefined | null): boolean {
   return x !== undefined && x !== null;
 }
 
 // Kelvin to Celcius to nearest degree
-export function kelvinToCelsius(temp: number): number {
+export function kelvinToLocalTemp(temp: number): number {
   return Number((temp - 273.15).toFixed(0));
 }
 
@@ -90,8 +91,8 @@ export function getWeatherInfo(
   );
 
   return {
-    minTemp: kelvinToCelsius(minMaxArr[0]),
-    maxTemp: kelvinToCelsius(minMaxArr[1]),
+    minTemp: kelvinToLocalTemp(minMaxArr[0]),
+    maxTemp: kelvinToLocalTemp(minMaxArr[1]),
     rainAmount: Number(rainAmount.toFixed(0)),
     snowAmount: Number(snowAmount.toFixed(0)),
     isViable: viableTypes.isOptimal || viableTypes.isViable,
@@ -175,4 +176,11 @@ export function getViableWeatherSlots(
   });
 
   return inspectObj;
+}
+
+export function getCountryCode(countryName: string): string | undefined {
+  return countries.find(
+    (country: CountryID): boolean =>
+      country.label.toLowerCase() === countryName.toLowerCase()
+  )?.code;
 }

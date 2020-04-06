@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./DayPreviewItem.scss";
 import { WeatherListItem } from "../../types/openWeather.types";
 import moment from "moment";
-import { getWeatherInfo } from "../../common/support";
+import { getWeatherInfo, kelvinToLocalTemp } from "../../common/support";
 import {
   WeatherPreviewType,
   WeatherInspectionVariables,
@@ -113,12 +113,14 @@ function DayPreviewItem(props: {
           <>
             <div className="in-day-preview-item__preview-container">
               <p>&nbsp;</p>
+              <p>temp:</p>
               <p>wind:</p>
               <p>humidity:</p>
             </div>
             {state.nineAM !== undefined ? (
               <div className="in-day-preview-item__preview-container">
                 <p>9AM</p>
+                <p>{`${kelvinToLocalTemp(state.nineAM?.main.temp)}°`}</p>
                 <p>{`${state.nineAM?.wind.speed} M/S`}</p>
                 <p>{`${state.nineAM?.main.humidity}%`}</p>
               </div>
@@ -126,6 +128,7 @@ function DayPreviewItem(props: {
             {state.threePM !== undefined ? (
               <div className="in-day-preview-item__preview-container">
                 <p>3PM</p>
+                <p>{`${kelvinToLocalTemp(state.threePM?.main.temp)}°`}</p>
                 <p>{`${state.threePM?.wind.deg}° ${state.threePM?.wind.speed} M/S`}</p>
                 <p>{`${state.threePM?.main.humidity}%`}</p>
               </div>
@@ -133,13 +136,13 @@ function DayPreviewItem(props: {
           </>
         ) : state.isViable ? (
           <>
-            {Array(
+            {[
               ...state.viableTypes.optimalTimes,
-              ...state.viableTypes.viableTimes
-            ).map(
+              ...state.viableTypes.viableTimes,
+            ].map(
               (time: WeatherListItem, index: number): JSX.Element => {
                 return (
-                  <If condition={index < 2}>
+                  <If condition={index < 2} key={index}>
                     <div className="in-day-preview-item__preview-container">
                       <p>
                         {state.viableTypes.isOptimal &&
@@ -147,12 +150,14 @@ function DayPreviewItem(props: {
                           ? "Optimal"
                           : "Viable"}
                       </p>
+                      <p>temp:</p>
                       <p>wind:</p>
                       <p>humidity:</p>
                     </div>
 
                     <div className="in-day-preview-item__preview-container">
                       <p>{moment(time.dt_txt).format("h A")}</p>
+                      <p>{`${kelvinToLocalTemp(time.main.temp)}°`}</p>
                       <p>{`${time.wind.speed} M/S`}</p>
                       <p>{`${time.main.humidity}%`}</p>
                     </div>
