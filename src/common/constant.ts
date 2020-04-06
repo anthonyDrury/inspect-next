@@ -1,8 +1,27 @@
 import { State } from "../types/redux.types";
 import { CountryID } from "../types/location.type";
+import { WeatherInspectionVariables } from "../types/weather.type";
+
+export const baseWeatherConditions: WeatherInspectionVariables = {
+  // Temp conditions, in Kelvin
+  optTempMax: 310.15,
+  viaTempMax: 313.15,
+
+  optTempMin: 288.15,
+  viaTempMin: 283.15,
+
+  // Rain Conditions, mm/3hr
+  optRainMax: 0,
+  viaRainMax: 7.5,
+
+  // Wind Conditions, in m/s
+  optWindMax: 3,
+  viaWindMax: 5,
+};
 
 export const initialState: State = {
-  loading: false
+  loading: false,
+  weatherConditions: baseWeatherConditions,
 };
 
 export const countries: CountryID[] = [
@@ -253,5 +272,5 @@ export const countries: CountryID[] = [
   { code: "YT", label: "Mayotte" },
   { code: "ZA", label: "South Africa" },
   { code: "ZM", label: "Zambia" },
-  { code: "ZW", label: "Zimbabwe" }
+  { code: "ZW", label: "Zimbabwe" },
 ];

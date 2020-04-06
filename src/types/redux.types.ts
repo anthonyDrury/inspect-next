@@ -1,6 +1,7 @@
 import { Location } from "./location.type";
 import { FiveDayForecast } from "./openWeather.types";
 import { Moment } from "moment";
+import { WeatherInspectionVariables } from "./weather.type";
 
 export type State = {
   fiveDayForecast?: FiveDayForecast;
@@ -8,6 +9,7 @@ export type State = {
   fiveDayLocationFor?: Location;
   location?: Location;
   loading: boolean;
+  weatherConditions: WeatherInspectionVariables;
 };
 
 export type Action = {

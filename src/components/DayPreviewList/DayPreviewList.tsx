@@ -3,35 +3,50 @@ import "./DayPreviewList.css";
 import { WeatherListItem } from "../../types/openWeather.types";
 import moment, { Moment } from "moment";
 import DayPreviewItem from "../DayPreviewItem/DayPreviewItem";
+import { WeatherInspectionVariables } from "../../types/weather.type";
 
-function DayPreviewList(props: {
+type DayPreviewListProps = {
   list: WeatherListItem[];
   cacheTime: moment.Moment;
-}): JSX.Element {
+  weatherConditions: WeatherInspectionVariables;
+  sunriseTime: number;
+  sunsetTime: number;
+};
+function DayPreviewList(props: DayPreviewListProps): JSX.Element {
   const [listState, setState]: [
     {
       weatherMap: Map<string, Map<string, WeatherListItem>>;
       cacheTime: Moment;
+      weatherConditions: WeatherInspectionVariables;
+      sunriseTime: number;
+      sunsetTime: number;
     },
     Dispatch<
       SetStateAction<{
         weatherMap: Map<string, Map<string, WeatherListItem>>;
         cacheTime: Moment;
+        weatherConditions: WeatherInspectionVariables;
+        sunriseTime: number;
+        sunsetTime: number;
       }>
     >
   ] = useState({
     weatherMap: mapListToWeatherMap(props.list),
     cacheTime: props.cacheTime,
+    weatherConditions: props.weatherConditions,
+    sunriseTime: props.sunriseTime,
+    sunsetTime: props.sunsetTime,
   });
 
   useEffect((): void => {
     if (listState.cacheTime.toString() !== props.cacheTime.toString()) {
       setState({
+        ...listState,
         weatherMap: mapListToWeatherMap(props.list),
         cacheTime: props.cacheTime,
       });
     }
-  }, [listState.cacheTime, props.cacheTime, props.list]);
+  }, [props.cacheTime, props.list, props.weatherConditions, listState]);
 
   function mapListToWeatherMap(
     list: WeatherListItem[]
@@ -64,7 +79,10 @@ function DayPreviewList(props: {
           return (
             <DayPreviewItem
               hourList={Array.from(hour.values())}
+              weatherVars={listState.weatherConditions}
               key={index}
+              sunriseTime={listState.sunriseTime}
+              sunsetTime={listState.sunsetTime}
             ></DayPreviewItem>
           );
         }
