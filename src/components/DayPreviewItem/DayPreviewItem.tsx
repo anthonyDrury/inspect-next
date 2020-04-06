@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./DayPreviewItem.scss";
 import { WeatherListItem } from "../../types/openWeather.types";
 import moment from "moment";
-import { getWeatherInfo } from "../../common/support";
+import { getWeatherInfo, kelvinToLocalTemp } from "../../common/support";
 import {
   WeatherPreviewType,
   WeatherInspectionVariables,
@@ -13,6 +13,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import If from "../If/If";
+import { Grid } from "@material-ui/core";
 
 function DayPreviewItem(props: {
   hourList: WeatherListItem[];
@@ -41,8 +42,8 @@ function DayPreviewItem(props: {
   }, [props.hourList, props.weatherVars, props.sunriseTime, props.sunsetTime]);
 
   return (
-    <div className="in-day-preview-item">
-      <div>
+    <Grid container className="in-day-preview-item">
+      <Grid item xs={4} sm={2}>
         <img
           src={`http://openweathermap.org/img/wn/${(state.defaultWeather.weather[0]?.icon).replace(
             "n",
@@ -68,24 +69,43 @@ function DayPreviewItem(props: {
             </>
           )}
         </div>
-      </div>
+      </Grid>
 
-      <div className="in-day-preview-item__weather-info">
-        <p className="in-text--extra-large">
+      <Grid
+        item
+        container
+        direction="column"
+        alignContent="center"
+        justify="center"
+        xs={8}
+        sm={4}
+      >
+        <p className="in-text--extra-large in-day-preview-item__infoText">
           {moment(state.defaultWeather.dt_txt).format("dddd")}
         </p>
-        <p className="in-text--large">
+        <p className="in-text--large in-day-preview-item__infoText">
           {state.defaultWeather.weather[0].description}
         </p>
-        <p className="in-text--large">
+        <p className="in-text--large in-day-preview-item__infoText">
           {state.minTemp}° - {state.maxTemp}°
         </p>
-        <p>rain: {`${state.rainAmount}mm`}</p>
-        <p>Snow: {`${state.snowAmount}mm`}</p>
-      </div>
+        <p className="in-day-preview-item__infoText">
+          rain: {`${state.rainAmount}mm`}
+        </p>
+        <p className="in-day-preview-item__infoText">
+          Snow: {`${state.snowAmount}mm`}
+        </p>
+      </Grid>
 
-      <div className="in-day-preview-item__preview">
-        {/* TO DO: change deg into arrow pointing direction */}
+      <Grid
+        item
+        container
+        direction="row"
+        justify="center"
+        alignItems="center"
+        xs={12}
+        sm={6}
+      >
         {/* TO DO: convert metric to settings (metric/imperial) */}
 
         {!state.isViable &&
@@ -93,12 +113,14 @@ function DayPreviewItem(props: {
           <>
             <div className="in-day-preview-item__preview-container">
               <p>&nbsp;</p>
+              <p>temp:</p>
               <p>wind:</p>
               <p>humidity:</p>
             </div>
             {state.nineAM !== undefined ? (
               <div className="in-day-preview-item__preview-container">
                 <p>9AM</p>
+                <p>{`${kelvinToLocalTemp(state.nineAM?.main.temp)}°`}</p>
                 <p>{`${state.nineAM?.wind.speed} M/S`}</p>
                 <p>{`${state.nineAM?.main.humidity}%`}</p>
               </div>
@@ -106,6 +128,7 @@ function DayPreviewItem(props: {
             {state.threePM !== undefined ? (
               <div className="in-day-preview-item__preview-container">
                 <p>3PM</p>
+                <p>{`${kelvinToLocalTemp(state.threePM?.main.temp)}°`}</p>
                 <p>{`${state.threePM?.wind.deg}° ${state.threePM?.wind.speed} M/S`}</p>
                 <p>{`${state.threePM?.main.humidity}%`}</p>
               </div>
@@ -113,13 +136,13 @@ function DayPreviewItem(props: {
           </>
         ) : state.isViable ? (
           <>
-            {Array(
+            {[
               ...state.viableTypes.optimalTimes,
-              ...state.viableTypes.viableTimes
-            ).map(
+              ...state.viableTypes.viableTimes,
+            ].map(
               (time: WeatherListItem, index: number): JSX.Element => {
                 return (
-                  <If condition={index < 2}>
+                  <If condition={index < 2} key={index}>
                     <div className="in-day-preview-item__preview-container">
                       <p>
                         {state.viableTypes.isOptimal &&
@@ -127,12 +150,14 @@ function DayPreviewItem(props: {
                           ? "Optimal"
                           : "Viable"}
                       </p>
+                      <p>temp:</p>
                       <p>wind:</p>
                       <p>humidity:</p>
                     </div>
 
                     <div className="in-day-preview-item__preview-container">
                       <p>{moment(time.dt_txt).format("h A")}</p>
+                      <p>{`${kelvinToLocalTemp(time.main.temp)}°`}</p>
                       <p>{`${time.wind.speed} M/S`}</p>
                       <p>{`${time.main.humidity}%`}</p>
                     </div>
@@ -142,8 +167,9 @@ function DayPreviewItem(props: {
             )}
           </>
         ) : null}
-      </div>
-    </div>
+        {/* </div> */}
+      </Grid>
+    </Grid>
   );
 }
 
