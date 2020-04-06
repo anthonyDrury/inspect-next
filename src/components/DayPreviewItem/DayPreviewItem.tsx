@@ -113,16 +113,19 @@ function DayPreviewItem(props: {
           </>
         ) : state.isViable ? (
           <>
-            {(state.viableTypes.isOptimal
-              ? state.viableTypes.optimalTimes
-              : state.viableTypes.viableTimes
+            {Array(
+              ...state.viableTypes.optimalTimes,
+              ...state.viableTypes.viableTimes
             ).map(
               (time: WeatherListItem, index: number): JSX.Element => {
                 return (
                   <If condition={index < 2}>
                     <div className="in-day-preview-item__preview-container">
                       <p>
-                        {state.viableTypes.isOptimal ? "Optimal" : "Viable"}
+                        {state.viableTypes.isOptimal &&
+                        index <= state.viableTypes.optimalTimes.length - 1
+                          ? "Optimal"
+                          : "Viable"}
                       </p>
                       <p>wind:</p>
                       <p>humidity:</p>
