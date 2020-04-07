@@ -5,6 +5,8 @@ import {
   WeatherPreviewType,
   ViableWeather,
   WeatherInspectionVariables,
+  WeatherReasonObj,
+  WeatherReason,
 } from "../types/weather.type";
 import { countries } from "./constant";
 
@@ -108,7 +110,7 @@ export function isWeatherViable(
   weatherVars: WeatherInspectionVariables,
   sunriseTime: number,
   sunsetTime: number
-): boolean {
+): WeatherReasonObj {
   const sunrise: number = moment(sunriseTime * 1000).hours();
   const sunset: number = moment(sunsetTime * 1000).hours();
   const isDaylight: boolean =
@@ -117,13 +119,18 @@ export function isWeatherViable(
   const isRainViable: boolean =
     weatherItem.rain === undefined ||
     weatherItem.rain["3h"] <= weatherVars.viaRainMax;
-  const isTempViable: boolean =
-    weatherItem.main.temp >= weatherVars.viaTempMin &&
-    weatherItem.main.temp <= weatherVars.viaTempMax;
+  const isTooHot: boolean = weatherItem.main.temp > weatherVars.viaTempMax;
+  const isTooCold: boolean = weatherItem.main.temp < weatherVars.viaTempMin;
   const isWindViable: boolean =
     weatherItem.wind.speed <= weatherVars.viaWindMax;
 
-  return isDaylight && isRainViable && isTempViable && isWindViable;
+  return {
+    isDaylight,
+    isTooWet: !isRainViable,
+    isTooCold,
+    isTooHot,
+    isTooWindy: !isWindViable,
+  };
 }
 
 export function isWeatherOptimal(
@@ -131,7 +138,7 @@ export function isWeatherOptimal(
   weatherVars: WeatherInspectionVariables,
   sunriseTime: number,
   sunsetTime: number
-): boolean {
+): WeatherReasonObj {
   const sunrise: number = moment(sunriseTime * 1000).hours();
   const sunset: number = moment(sunsetTime * 1000).hours();
   const isDaylight: boolean =
@@ -140,42 +147,95 @@ export function isWeatherOptimal(
   const isRainOptimal: boolean =
     weatherItem.rain === undefined ||
     weatherItem.rain["3h"] <= weatherVars.optRainMax;
-  const isTempOptimal: boolean =
-    weatherItem.main.temp >= weatherVars.optTempMin &&
-    weatherItem.main.temp <= weatherVars.optTempMax;
-  const isWindOptimal: boolean =
+  const isTooHot: boolean = weatherItem.main.temp > weatherVars.optTempMax;
+  const isTooCold: boolean = weatherItem.main.temp < weatherVars.optTempMin;
+  const isWindViable: boolean =
     weatherItem.wind.speed <= weatherVars.optWindMax;
 
-  return isDaylight && isRainOptimal && isTempOptimal && isWindOptimal;
+  return {
+    isDaylight,
+    isTooWet: !isRainOptimal,
+    isTooCold,
+    isTooHot,
+    isTooWindy: !isWindViable,
+  };
+}
+
+export function getIsWeatherValid(weatherReason: WeatherReasonObj): boolean {
+  return (
+    weatherReason.isDaylight &&
+    !weatherReason.isTooCold &&
+    !weatherReason.isTooHot &&
+    !weatherReason.isTooWet &&
+    !weatherReason.isTooWindy
+  );
+}
+
+export function getReason(
+  weatherReason: WeatherReasonObj,
+  valid: boolean
+): WeatherReason {
+  if (weatherReason.isTooCold) {
+    return valid ? "A little cold" : "Too cold";
+  }
+  if (weatherReason.isTooHot) {
+    return valid ? "A little hot" : "Too hot";
+  }
+
+  if (weatherReason.isTooWet) {
+    return valid ? "A little wet" : "Too wet";
+  }
+  if (weatherReason.isTooWindy) {
+    return valid ? "A little windy" : "Too windy";
+  }
+  return "Optimal conditions";
 }
 
 export function getViableWeatherSlots(
   weatherList: WeatherListItem[],
   weatherVars: WeatherInspectionVariables,
-
   sunriseTime: number,
   sunsetTime: number
 ): ViableWeather {
-  const inspectObj: ViableWeather = {
-    viableTimes: [],
-    optimalTimes: [],
-    isViable: false,
-    isOptimal: false,
-  };
+  const viableTimes: WeatherListItem[] = [];
+  const optimalTimes: WeatherListItem[] = [];
+  let isViable: boolean = false;
+  let isOptimal: boolean = false;
+
+  let isViableObj: WeatherReasonObj | undefined;
+  let isOptimalObj: WeatherReasonObj | undefined;
 
   weatherList.forEach((listItem: WeatherListItem): void => {
-    if (isWeatherOptimal(listItem, weatherVars, sunriseTime, sunsetTime)) {
-      inspectObj.optimalTimes.push(listItem);
-      inspectObj.isOptimal = true;
-    } else if (
-      isWeatherViable(listItem, weatherVars, sunriseTime, sunsetTime)
-    ) {
-      inspectObj.viableTimes.push(listItem);
-      inspectObj.isViable = true;
+    isViableObj = isWeatherViable(
+      listItem,
+      weatherVars,
+      sunriseTime,
+      sunsetTime
+    );
+
+    isOptimalObj = isWeatherOptimal(
+      listItem,
+      weatherVars,
+      sunriseTime,
+      sunsetTime
+    );
+    if (getIsWeatherValid(isOptimalObj)) {
+      optimalTimes.push(listItem);
+      isOptimal = true;
+    } else if (getIsWeatherValid(isViableObj)) {
+      viableTimes.push(listItem);
+      isViable = true;
     }
   });
 
-  return inspectObj;
+  return {
+    isOptimal,
+    isViable,
+    isOptimalObj: isOptimalObj as WeatherReasonObj,
+    isViableObj: isViableObj as WeatherReasonObj,
+    optimalTimes,
+    viableTimes,
+  };
 }
 
 export function getCountryCode(countryName: string): string | undefined {

@@ -40,7 +40,7 @@ function LocationSetPage(props?: LocationSetProps): JSX.Element {
   return (
     <div className="in-home">
       <h1>
-        Five Day Forecast for {props?.state?.fiveDayLocationFor?.cityName},{" "}
+        Forecast for {props?.state?.fiveDayLocationFor?.cityName},{" "}
         {props?.state?.fiveDayLocationFor?.countryName}
       </h1>
       {props?.state?.fiveDayForecast && props?.state.fiveDayExpiresAt ? (
