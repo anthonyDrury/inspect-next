@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import "./DayPreviewItem.scss";
 import { WeatherListItem } from "../../types/openWeather.types";
 import moment from "moment";
-import { getWeatherInfo, kelvinToLocalTemp } from "../../common/support";
+import {
+  getWeatherInfo,
+  kelvinToLocalTemp,
+  getReason,
+} from "../../common/support";
 import {
   WeatherPreviewType,
   WeatherInspectionVariables,
@@ -54,8 +58,9 @@ function DayPreviewItem(props: {
         <div className="in-day-preview-item__is-viable">
           {state.viableTypes.isViable || state.viableTypes.isOptimal ? (
             <>
-              <p>{state.viableTypes.isOptimal ? "Optimal" : "Viable"}</p>
-              <p>Inspections</p>
+              <p>
+                {state.viableTypes.isOptimal ? "Optimal" : "Viable"} Inspections
+              </p>
               <FontAwesomeIcon
                 size="3x"
                 color={state.viableTypes.isOptimal ? "green" : "black"}
@@ -68,6 +73,16 @@ function DayPreviewItem(props: {
               <FontAwesomeIcon color="red" size="3x" icon={faTimesCircle} />
             </>
           )}
+          <If condition={!state.viableTypes.isOptimal}>
+            <p>
+              {getReason(
+                state.viableTypes.isViable
+                  ? state.viableTypes.isOptimalObj
+                  : state.viableTypes.isViableObj,
+                state.viableTypes.isViable
+              )}
+            </p>
+          </If>
         </div>
       </Grid>
 

@@ -21,7 +21,34 @@ export type ViableWeather = {
   viableTimes: WeatherListItem[];
   isViable: boolean;
   isOptimal: boolean;
+  isViableObj: WeatherReasonObj;
+  isOptimalObj: WeatherReasonObj;
 };
+
+export type WeatherReasonObj = {
+  isDaylight: boolean;
+  isTooHot: boolean;
+  isTooCold: boolean;
+  isTooWet: boolean;
+  isTooWindy: boolean;
+};
+
+export type WeatherReason = OptimalReason | ViableReason | InadvisableReason;
+
+export type ViableReason =
+  | "A little cold"
+  | "A little hot"
+  | "A little windy"
+  | "A little wet";
+
+export type InadvisableReason =
+  | "Too dark"
+  | "Too cold"
+  | "Too hot"
+  | "Too windy"
+  | "Too wet";
+
+export type OptimalReason = "Optimal conditions";
 
 // Weather conditions
 export type WeatherInspectionVariables = {
