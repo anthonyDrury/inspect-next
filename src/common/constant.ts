@@ -1,6 +1,7 @@
 import { State } from "../types/redux.types";
 import { CountryID } from "../types/location.type";
 import { WeatherInspectionVariables } from "../types/weather.type";
+import { Settings } from "../types/app.type";
 
 export const baseWeatherConditions: WeatherInspectionVariables = {
   // Temp conditions, in Kelvin
@@ -19,9 +20,14 @@ export const baseWeatherConditions: WeatherInspectionVariables = {
   viaWindMax: 5,
 };
 
+export const baseSettings: Settings = {
+  units: "Imperial",
+  inspectionWeatherVars: baseWeatherConditions,
+};
+
 export const initialState: State = {
   loading: false,
-  weatherConditions: baseWeatherConditions,
+  settings: baseSettings,
 };
 
 export const countries: CountryID[] = [
