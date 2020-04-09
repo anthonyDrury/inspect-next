@@ -1,5 +1,5 @@
 import { State, Actions } from "../../types/redux.types";
-import { initialState, baseSettings } from "../../common/constant";
+import { initialState } from "../../common/constant";
 
 export default (state: State = initialState, action: Actions): State => {
   switch (action.type) {
@@ -20,14 +20,10 @@ export default (state: State = initialState, action: Actions): State => {
       };
     case "UPDATE_SETTINGS":
     case "TOGGLE_UNITS":
-      return {
-        ...state,
-        settings: action.payload.settings,
-      };
     case "RESET_SETTINGS":
       return {
         ...state,
-        settings: baseSettings,
+        settings: action.payload.settings,
       };
     default:
       return state;

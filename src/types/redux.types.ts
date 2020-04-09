@@ -26,18 +26,12 @@ export type Actions =
   | UpdateFiveDayAction
   | UpdateLoadingAction
   | UpdateLocationAction
-  | UpdateSettingsAction
-  | ToggleUnitsAction
+  | UpdateSettingsActions
   | NonPayloadAction;
 
 export interface UpdateLoadingAction extends Action {
   type: "UPDATE_LOADING";
   payload: { loading: State["loading"] };
-}
-
-export interface ToggleUnitsAction extends Action {
-  type: "TOGGLE_UNITS";
-  payload: { settings: State["settings"] };
 }
 
 export interface UpdateFiveDayAction extends Action {
@@ -57,13 +51,13 @@ export interface UpdateLocationAction extends Action {
   payload: { location: State["location"] };
 }
 
-export interface UpdateSettingsAction extends Action {
-  type: "UPDATE_SETTINGS";
+export interface UpdateSettingsActions extends Action {
+  type: SettingsActionType;
   payload: { settings: State["settings"] };
 }
 
 export interface NonPayloadAction extends Action {
-  type: "DELETE_FIVE_DAY" | "RESET_SETTINGS";
+  type: "DELETE_FIVE_DAY";
 }
 
 export type AllActionTypes =

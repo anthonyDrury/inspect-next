@@ -72,10 +72,11 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
           Best conditions to hold an inspection, use these days if possible.
         </p>
         <Grid container spacing={3}>
-          <Grid item xs={12}>
+          <Grid item container justify="center" xs={12}>
             <TextField
               id="optimal-temp-min"
               label="Minimum optimal temp"
+              style={{ maxWidth: "15rem" }}
               value={props?.state?.settings.inspectionWeatherVars.optTempMin}
               variant="filled"
               onChange={(
@@ -93,8 +94,11 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
               }}
               type="number"
             />
+          </Grid>
+          <Grid item container justify="center" xs={12}>
             <TextField
               label="Maximum optimal temp"
+              style={{ maxWidth: "15rem" }}
               id="optimal-temp-max"
               type="number"
               value={props?.state?.settings.inspectionWeatherVars.optTempMax}
@@ -114,10 +118,11 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
               }}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item container justify="center" xs={12}>
             <TextField
               id="optimal-rain-max"
               label="Maximum optimal rain"
+              style={{ maxWidth: "15rem" }}
               value={props?.state?.settings.inspectionWeatherVars.optRainMax}
               variant="filled"
               onChange={(
@@ -128,16 +133,17 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
               }
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position="end">mm/hr</InputAdornment>
+                  <InputAdornment position="end">mm/3hr</InputAdornment>
                 ),
               }}
               type="number"
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item container justify="center" xs={12}>
             <TextField
               id="optimal-wind-max"
               label="Maximum optimal wind"
+              style={{ maxWidth: "15rem" }}
               value={props?.state?.settings.inspectionWeatherVars.optWindMax}
               variant="filled"
               onChange={(
@@ -167,10 +173,11 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
           if needed.
         </p>
         <Grid container spacing={3}>
-          <Grid item xs={12}>
+          <Grid item container justify="center" xs={12}>
             <TextField
               id="viable-temp-min"
               label="Minimum viable temp"
+              style={{ maxWidth: "15rem" }}
               value={props?.state?.settings.inspectionWeatherVars.viaTempMin}
               variant="filled"
               onChange={(
@@ -188,8 +195,11 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
               }}
               type="number"
             />
+          </Grid>
+          <Grid item container justify="center" xs={12}>
             <TextField
               label="Maximum viable temp"
+              style={{ maxWidth: "15rem" }}
               id="viable-temp-max"
               type="number"
               variant="filled"
@@ -209,10 +219,11 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
               }}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item container justify="center" xs={12}>
             <TextField
               id="viable-rain-max"
               label="Maximum viable rain"
+              style={{ maxWidth: "15rem" }}
               value={props?.state?.settings.inspectionWeatherVars.viaRainMax}
               variant="filled"
               onChange={(
@@ -223,16 +234,17 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
               }
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position="end">mm/hr</InputAdornment>
+                  <InputAdornment position="end">mm/3hr</InputAdornment>
                 ),
               }}
               type="number"
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item container justify="center" xs={12}>
             <TextField
               id="viable-wind-max"
               label="Maximum viable wind"
+              style={{ maxWidth: "15rem" }}
               value={props?.state?.settings.inspectionWeatherVars.viaWindMax}
               variant="filled"
               onChange={(
