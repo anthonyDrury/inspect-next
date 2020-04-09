@@ -20,6 +20,6 @@ test("renders Home Page", () => {
       </Router>
     </Provider>
   );
-  const headElement = getByText(/Five Day Forecast for/i);
+  const headElement = getByText(/Forecast for/i);
   expect(headElement).toBeInTheDocument();
 });
