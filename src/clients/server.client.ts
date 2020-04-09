@@ -1,9 +1,5 @@
 import { FiveDayForecast } from "../types/openWeather.types";
-import {
-  isExpired,
-  locationSetForDifferent,
-  getCountryCode,
-} from "../common/support";
+import { getCountryCode, isStateValid } from "../common/support";
 import store from "../redux/store/store";
 import { updateFiveDayForecast } from "../redux/actions/weather.actions";
 import { updateLoading } from "../redux/actions/loading.actions";
@@ -17,29 +13,26 @@ export const API_URL: string =
 
 export async function getFiveDay(location: Location): Promise<void> {
   const state: State = store.getState();
-  if (
-    (isExpired(state.fiveDayExpiresAt) ||
-      !locationSetForDifferent(location, state.fiveDayLocationFor)) &&
-    !state.loading
-  ) {
+  if (!isStateValid("fiveDay", state) && !state.loading) {
     store.dispatch(updateLoading(true));
     const coutryCode: string | undefined = getCountryCode(location.countryName);
     const response: Response = await fetch(
       `${API_URL}/fiveDay?cityName=${location.cityName}${
         coutryCode !== undefined ? `,${coutryCode}` : ""
-      }`
+      }&units=${state.settings.units.toLowerCase()}`
     );
     const body: Promise<FiveDayForecast> = response.json();
 
     // Typically means openWeather does not have the city
     if (response.status !== 200) {
-      window.location.href = Routes.LOCATION_NOT_FOUND;
       store.dispatch(updateLoading(false));
-      throw Error((body as any).message);
+      window.location.href = Routes.LOCATION_NOT_FOUND;
     }
 
     await body.then((data: FiveDayForecast): void => {
-      store.dispatch(updateFiveDayForecast(data, location));
+      store.dispatch(
+        updateFiveDayForecast(data, location, state.settings.units)
+      );
       store.dispatch(updateLoading(false));
     });
   }

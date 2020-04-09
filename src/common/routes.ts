@@ -6,7 +6,6 @@ export enum Routes {
   DATE = "/date/:dateId",
   FIVE_DAY = "/:cityName/:countryName",
   MONTHLY = "/monthly",
-  SETTINGS = "/settings",
   LOCATION_NOT_FOUND = "/location-not-found",
 }
 
@@ -40,14 +39,11 @@ export function mapFromUrlSafeLocation<T extends Location | undefined>(
     : location;
 }
 
-export function doesStateMatchRoute(
-  route?: Location,
-  stateLocation?: Location
-): boolean {
+export function doLocationMatch(l1?: Location, l2?: Location): boolean {
   return (
-    isDefined(stateLocation) &&
-    isDefined(route) &&
-    stringFromSafeUrl(route!.cityName) === stateLocation!.cityName &&
-    stringFromSafeUrl(route!.countryName) === stateLocation!.countryName
+    isDefined(l1) &&
+    isDefined(l2) &&
+    stringFromSafeUrl(l1!.cityName) === l2!.cityName &&
+    stringFromSafeUrl(l1!.countryName) === l2!.countryName
   );
 }
