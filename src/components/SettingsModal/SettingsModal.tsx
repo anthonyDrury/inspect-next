@@ -6,7 +6,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCog } from "@fortawesome/free-solid-svg-icons";
 import { Modal, Grid, Paper, Fade, Backdrop, Button } from "@material-ui/core";
 import { Settings } from "../../types/app.type";
-import { updateSettings } from "../../redux/actions/settings.actions";
+import {
+  updateSettings,
+  resetSettings,
+} from "../../redux/actions/settings.actions";
 import UnitsMod from "../UnitsMod/UnitsMod";
 import InspectionVarMod from "../InspectionVarMod/InspectionVarMod";
 
@@ -15,6 +18,7 @@ type SettingsModalState = {
 };
 type SettingsModalProps = {
   updateSettings?: (d: Settings) => void;
+  resetSettings?: () => void;
   state?: State;
 };
 function SettingsModal(props?: SettingsModalProps): JSX.Element {
@@ -60,6 +64,17 @@ function SettingsModal(props?: SettingsModalProps): JSX.Element {
               </Grid>
               <Grid item container justify="center" xs={12}>
                 <Button
+                  onClick={(): void => {
+                    if (props?.resetSettings !== undefined) {
+                      props.resetSettings();
+                    }
+                  }}
+                  color="secondary"
+                  variant="contained"
+                >
+                  reset to default
+                </Button>
+                <Button
                   onClick={(): void => setLocalState({ expanded: false })}
                   color="secondary"
                   variant="contained"
@@ -91,6 +106,7 @@ const mapDispatchToProps: (
 ): SettingsModalProps => {
   return {
     updateSettings: (s: Settings): void => dispatch(updateSettings(s)),
+    resetSettings: (): void => dispatch(resetSettings()),
     ...ownProps,
   };
 };

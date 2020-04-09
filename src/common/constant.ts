@@ -5,19 +5,19 @@ import { Settings } from "../types/app.type";
 
 export const baseWeatherConditions: WeatherInspectionVariables = {
   // Temp conditions, in Kelvin
-  optTempMax: 310.15,
-  viaTempMax: 313.15,
+  optTempMax: 98.6,
+  viaTempMax: 104,
 
-  optTempMin: 288.15,
-  viaTempMin: 283.15,
+  optTempMin: 59,
+  viaTempMin: 50,
 
   // Rain Conditions, mm/3hr
   optRainMax: 0,
   viaRainMax: 7.5,
 
   // Wind Conditions, in m/s
-  optWindMax: 3,
-  viaWindMax: 5,
+  optWindMax: 2.25,
+  viaWindMax: 11.25,
 };
 
 export const baseSettings: Settings = {
