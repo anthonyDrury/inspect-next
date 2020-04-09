@@ -5,20 +5,43 @@ import {
   WeatherPreviewType,
   ViableWeather,
   WeatherInspectionVariables,
+  WeatherReasonObj,
+  WeatherReason,
 } from "../types/weather.type";
 import { countries } from "./constant";
+import { Settings } from "../types/app.type";
+import { State } from "../types/redux.types";
+import { doLocationMatch } from "./routes";
 
 export function isDefined(x: any | undefined | null): boolean {
   return x !== undefined && x !== null;
 }
 
-// Kelvin to Celcius to nearest degree
-export function kelvinToLocalTemp(temp: number): number {
-  return Number((temp - 273.15).toFixed(0));
-}
-
 export function isExpired(time: Moment | undefined): boolean {
   return !isDefined(time) || moment(time).isBefore(moment());
+}
+
+export function isFiveDayValid(state: State, newLocation?: Location): boolean {
+  const isNotExpired: boolean =
+    state.fiveDay !== undefined && !isExpired(state.fiveDay.expiresAt);
+
+  const isLocationValid: boolean =
+    newLocation !== undefined
+      ? doLocationMatch(state.fiveDay?.locationFor, newLocation)
+      : doLocationMatch(state.location, state.fiveDay?.locationFor);
+
+  const isUnitValid: boolean = state.settings.units === state.fiveDay?.unitsFor;
+  return isNotExpired && isLocationValid && isUnitValid;
+}
+
+export function isStateValid(param: keyof State, state: State): boolean {
+  switch (param) {
+    case "fiveDay":
+      return isFiveDayValid(state);
+
+    default:
+      return false;
+  }
 }
 
 export function getUuid(): string {
@@ -91,8 +114,8 @@ export function getWeatherInfo(
   );
 
   return {
-    minTemp: kelvinToLocalTemp(minMaxArr[0]),
-    maxTemp: kelvinToLocalTemp(minMaxArr[1]),
+    minTemp: minMaxArr[0],
+    maxTemp: minMaxArr[1],
     rainAmount: Number(rainAmount.toFixed(0)),
     snowAmount: Number(snowAmount.toFixed(0)),
     isViable: viableTypes.isOptimal || viableTypes.isViable,
@@ -108,7 +131,7 @@ export function isWeatherViable(
   weatherVars: WeatherInspectionVariables,
   sunriseTime: number,
   sunsetTime: number
-): boolean {
+): WeatherReasonObj {
   const sunrise: number = moment(sunriseTime * 1000).hours();
   const sunset: number = moment(sunsetTime * 1000).hours();
   const isDaylight: boolean =
@@ -117,13 +140,18 @@ export function isWeatherViable(
   const isRainViable: boolean =
     weatherItem.rain === undefined ||
     weatherItem.rain["3h"] <= weatherVars.viaRainMax;
-  const isTempViable: boolean =
-    weatherItem.main.temp >= weatherVars.viaTempMin &&
-    weatherItem.main.temp <= weatherVars.viaTempMax;
+  const isTooHot: boolean = weatherItem.main.temp_max > weatherVars.viaTempMax;
+  const isTooCold: boolean = weatherItem.main.temp_min < weatherVars.viaTempMin;
   const isWindViable: boolean =
     weatherItem.wind.speed <= weatherVars.viaWindMax;
 
-  return isDaylight && isRainViable && isTempViable && isWindViable;
+  return {
+    isDaylight,
+    isTooWet: !isRainViable,
+    isTooCold,
+    isTooHot,
+    isTooWindy: !isWindViable,
+  };
 }
 
 export function isWeatherOptimal(
@@ -131,7 +159,7 @@ export function isWeatherOptimal(
   weatherVars: WeatherInspectionVariables,
   sunriseTime: number,
   sunsetTime: number
-): boolean {
+): WeatherReasonObj {
   const sunrise: number = moment(sunriseTime * 1000).hours();
   const sunset: number = moment(sunsetTime * 1000).hours();
   const isDaylight: boolean =
@@ -140,42 +168,95 @@ export function isWeatherOptimal(
   const isRainOptimal: boolean =
     weatherItem.rain === undefined ||
     weatherItem.rain["3h"] <= weatherVars.optRainMax;
-  const isTempOptimal: boolean =
-    weatherItem.main.temp >= weatherVars.optTempMin &&
-    weatherItem.main.temp <= weatherVars.optTempMax;
-  const isWindOptimal: boolean =
+  const isTooHot: boolean = weatherItem.main.temp_min > weatherVars.optTempMax;
+  const isTooCold: boolean = weatherItem.main.temp_min < weatherVars.optTempMin;
+  const isWindViable: boolean =
     weatherItem.wind.speed <= weatherVars.optWindMax;
 
-  return isDaylight && isRainOptimal && isTempOptimal && isWindOptimal;
+  return {
+    isDaylight,
+    isTooWet: !isRainOptimal,
+    isTooCold,
+    isTooHot,
+    isTooWindy: !isWindViable,
+  };
+}
+
+export function getIsWeatherValid(weatherReason: WeatherReasonObj): boolean {
+  return (
+    weatherReason.isDaylight &&
+    !weatherReason.isTooCold &&
+    !weatherReason.isTooHot &&
+    !weatherReason.isTooWet &&
+    !weatherReason.isTooWindy
+  );
+}
+
+export function getReason(
+  weatherReason: WeatherReasonObj,
+  valid: boolean
+): WeatherReason {
+  if (weatherReason.isTooCold) {
+    return valid ? "A little cold" : "Too cold";
+  }
+  if (weatherReason.isTooHot) {
+    return valid ? "A little hot" : "Too hot";
+  }
+
+  if (weatherReason.isTooWet) {
+    return valid ? "A little wet" : "Too wet";
+  }
+  if (weatherReason.isTooWindy) {
+    return valid ? "A little windy" : "Too windy";
+  }
+  return "Optimal conditions";
 }
 
 export function getViableWeatherSlots(
   weatherList: WeatherListItem[],
   weatherVars: WeatherInspectionVariables,
-
   sunriseTime: number,
   sunsetTime: number
 ): ViableWeather {
-  const inspectObj: ViableWeather = {
-    viableTimes: [],
-    optimalTimes: [],
-    isViable: false,
-    isOptimal: false,
-  };
+  const viableTimes: WeatherListItem[] = [];
+  const optimalTimes: WeatherListItem[] = [];
+  let isViable: boolean = false;
+  let isOptimal: boolean = false;
+
+  let isViableObj: WeatherReasonObj | undefined;
+  let isOptimalObj: WeatherReasonObj | undefined;
 
   weatherList.forEach((listItem: WeatherListItem): void => {
-    if (isWeatherOptimal(listItem, weatherVars, sunriseTime, sunsetTime)) {
-      inspectObj.optimalTimes.push(listItem);
-      inspectObj.isOptimal = true;
-    } else if (
-      isWeatherViable(listItem, weatherVars, sunriseTime, sunsetTime)
-    ) {
-      inspectObj.viableTimes.push(listItem);
-      inspectObj.isViable = true;
+    isViableObj = isWeatherViable(
+      listItem,
+      weatherVars,
+      sunriseTime,
+      sunsetTime
+    );
+
+    isOptimalObj = isWeatherOptimal(
+      listItem,
+      weatherVars,
+      sunriseTime,
+      sunsetTime
+    );
+    if (getIsWeatherValid(isOptimalObj)) {
+      optimalTimes.push(listItem);
+      isOptimal = true;
+    } else if (getIsWeatherValid(isViableObj)) {
+      viableTimes.push(listItem);
+      isViable = true;
     }
   });
 
-  return inspectObj;
+  return {
+    isOptimal,
+    isViable,
+    isOptimalObj: isOptimalObj as WeatherReasonObj,
+    isViableObj: isViableObj as WeatherReasonObj,
+    optimalTimes,
+    viableTimes,
+  };
 }
 
 export function getCountryCode(countryName: string): string | undefined {
@@ -183,4 +264,97 @@ export function getCountryCode(countryName: string): string | undefined {
     (country: CountryID): boolean =>
       country.label.toLowerCase() === countryName.toLowerCase()
   )?.code;
+}
+
+export function kelvinToCelcius(temp: number): number {
+  return Number((temp - 273.15).toFixed(0));
+}
+
+export function kelvinToFahrenheit(temp: number): number {
+  return Number((((temp - 273.15) * 9) / 5 + 32).toFixed(2));
+}
+
+export function celsiusToFahrenheit(temp: number): number {
+  return Number((temp * (9 / 5) + 32).toFixed(2));
+}
+
+export function fahrenheitToCelsius(temp: number): number {
+  return Number((((temp - 32) * 5) / 9).toFixed(2));
+}
+
+export function metreSecToMilesHour(wind: number): number {
+  return Number((wind * 2.237).toFixed(2));
+}
+
+export function milesHourToMetreSec(wind: number): number {
+  return Number((wind / 2.237).toFixed(2));
+}
+
+export function mapSettingsToUnit(settings: Settings): Settings {
+  if (settings.units === "Imperial") {
+    return {
+      ...settings,
+      inspectionWeatherVars: {
+        optRainMax: settings.inspectionWeatherVars.optRainMax,
+        optTempMax: celsiusToFahrenheit(
+          settings.inspectionWeatherVars.optTempMax
+        ),
+        optTempMin: celsiusToFahrenheit(
+          settings.inspectionWeatherVars.optTempMin
+        ),
+        optWindMax: metreSecToMilesHour(
+          settings.inspectionWeatherVars.optWindMax
+        ),
+
+        viaRainMax: settings.inspectionWeatherVars.viaRainMax,
+        viaTempMax: celsiusToFahrenheit(
+          settings.inspectionWeatherVars.viaTempMax
+        ),
+        viaTempMin: celsiusToFahrenheit(
+          settings.inspectionWeatherVars.viaTempMin
+        ),
+        viaWindMax: metreSecToMilesHour(
+          settings.inspectionWeatherVars.viaWindMax
+        ),
+      },
+    };
+  } else {
+    return {
+      ...settings,
+      inspectionWeatherVars: {
+        optRainMax: settings.inspectionWeatherVars.optRainMax,
+        optTempMax: fahrenheitToCelsius(
+          settings.inspectionWeatherVars.optTempMax
+        ),
+        optTempMin: fahrenheitToCelsius(
+          settings.inspectionWeatherVars.optTempMin
+        ),
+        optWindMax: milesHourToMetreSec(
+          settings.inspectionWeatherVars.optWindMax
+        ),
+
+        viaRainMax: settings.inspectionWeatherVars.viaRainMax,
+        viaTempMax: fahrenheitToCelsius(
+          settings.inspectionWeatherVars.viaTempMax
+        ),
+        viaTempMin: fahrenheitToCelsius(
+          settings.inspectionWeatherVars.viaTempMin
+        ),
+        viaWindMax: milesHourToMetreSec(
+          settings.inspectionWeatherVars.viaWindMax
+        ),
+      },
+    };
+  }
+}
+
+export function areConditionsEqual(
+  w1: WeatherInspectionVariables,
+  w2: WeatherInspectionVariables
+): boolean {
+  return Object.keys(w1).every(
+    (k: string): boolean =>
+      w1[k as keyof WeatherInspectionVariables] ===
+      w2[k as keyof WeatherInspectionVariables]
+  );
 }

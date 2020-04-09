@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./DayPreviewItem.scss";
 import { WeatherListItem } from "../../types/openWeather.types";
 import moment from "moment";
-import { getWeatherInfo, kelvinToLocalTemp } from "../../common/support";
+import { getWeatherInfo, getReason } from "../../common/support";
 import {
   WeatherPreviewType,
   WeatherInspectionVariables,
@@ -45,7 +45,7 @@ function DayPreviewItem(props: {
     <Grid container className="in-day-preview-item">
       <Grid item xs={4} sm={2}>
         <img
-          src={`http://openweathermap.org/img/wn/${(state.defaultWeather.weather[0]?.icon).replace(
+          src={`/weatherIcons/${(state.defaultWeather.weather[0]?.icon).replace(
             "n",
             "d"
           )}@2x.png`}
@@ -54,8 +54,6 @@ function DayPreviewItem(props: {
         <div className="in-day-preview-item__is-viable">
           {state.viableTypes.isViable || state.viableTypes.isOptimal ? (
             <>
-              <p>{state.viableTypes.isOptimal ? "Optimal" : "Viable"}</p>
-              <p>Inspections</p>
               <FontAwesomeIcon
                 size="3x"
                 color={state.viableTypes.isOptimal ? "green" : "black"}
@@ -63,11 +61,18 @@ function DayPreviewItem(props: {
               />
             </>
           ) : (
-            <>
-              <p>Inadvisable to Inspect</p>
-              <FontAwesomeIcon color="red" size="3x" icon={faTimesCircle} />
-            </>
+            <FontAwesomeIcon color="red" size="3x" icon={faTimesCircle} />
           )}
+          <p>
+            {state.viableTypes.isOptimal
+              ? "Optimal conditions"
+              : getReason(
+                  state.viableTypes.isViable
+                    ? state.viableTypes.isOptimalObj
+                    : state.viableTypes.isViableObj,
+                  state.viableTypes.isViable
+                )}
+          </p>
         </div>
       </Grid>
 
@@ -117,25 +122,25 @@ function DayPreviewItem(props: {
               <p>wind:</p>
               <p>humidity:</p>
             </div>
-            {state.nineAM !== undefined ? (
+            <If condition={state.nineAM !== undefined}>
               <div className="in-day-preview-item__preview-container">
                 <p>9AM</p>
-                <p>{`${kelvinToLocalTemp(state.nineAM?.main.temp)}°`}</p>
+                <p>{`${state.nineAM!.main.temp}°`}</p>
                 <p>{`${state.nineAM?.wind.speed} M/S`}</p>
                 <p>{`${state.nineAM?.main.humidity}%`}</p>
               </div>
-            ) : null}
-            {state.threePM !== undefined ? (
+            </If>
+            <If condition={state.threePM !== undefined}>
               <div className="in-day-preview-item__preview-container">
                 <p>3PM</p>
-                <p>{`${kelvinToLocalTemp(state.threePM?.main.temp)}°`}</p>
+                <p>{`${state.threePM!.main.temp}°`}</p>
                 <p>{`${state.threePM?.wind.deg}° ${state.threePM?.wind.speed} M/S`}</p>
                 <p>{`${state.threePM?.main.humidity}%`}</p>
               </div>
-            ) : null}
+            </If>
           </>
-        ) : state.isViable ? (
-          <>
+        ) : (
+          <If condition={state.isViable}>
             {[
               ...state.viableTypes.optimalTimes,
               ...state.viableTypes.viableTimes,
@@ -157,7 +162,7 @@ function DayPreviewItem(props: {
 
                     <div className="in-day-preview-item__preview-container">
                       <p>{moment(time.dt_txt).format("h A")}</p>
-                      <p>{`${kelvinToLocalTemp(time.main.temp)}°`}</p>
+                      <p>{`${time.main.temp}°`}</p>
                       <p>{`${time.wind.speed} M/S`}</p>
                       <p>{`${time.main.humidity}%`}</p>
                     </div>
@@ -165,9 +170,8 @@ function DayPreviewItem(props: {
                 );
               }
             )}
-          </>
-        ) : null}
-        {/* </div> */}
+          </If>
+        )}
       </Grid>
     </Grid>
   );

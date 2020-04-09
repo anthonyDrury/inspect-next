@@ -4,6 +4,7 @@ import { WeatherListItem } from "../../types/openWeather.types";
 import moment, { Moment } from "moment";
 import DayPreviewItem from "../DayPreviewItem/DayPreviewItem";
 import { WeatherInspectionVariables } from "../../types/weather.type";
+import { areConditionsEqual } from "../../common/support";
 
 type DayPreviewListProps = {
   list: WeatherListItem[];
@@ -39,11 +40,15 @@ function DayPreviewList(props: DayPreviewListProps): JSX.Element {
   });
 
   useEffect((): void => {
-    if (listState.cacheTime.toString() !== props.cacheTime.toString()) {
+    if (
+      listState.cacheTime.toString() !== props.cacheTime.toString() ||
+      !areConditionsEqual(listState.weatherConditions, props.weatherConditions)
+    ) {
       setState({
         ...listState,
         weatherMap: mapListToWeatherMap(props.list),
         cacheTime: props.cacheTime,
+        weatherConditions: props.weatherConditions,
       });
     }
   }, [props.cacheTime, props.list, props.weatherConditions, listState]);
@@ -74,19 +79,24 @@ function DayPreviewList(props: DayPreviewListProps): JSX.Element {
 
   return (
     <div className="in-day-preview-list">
-      {Array.from(listState.weatherMap.values()).map(
-        (hour: Map<string, WeatherListItem>, index: number): JSX.Element => {
-          return (
-            <DayPreviewItem
-              hourList={Array.from(hour.values())}
-              weatherVars={listState.weatherConditions}
-              key={index}
-              sunriseTime={listState.sunriseTime}
-              sunsetTime={listState.sunsetTime}
-            ></DayPreviewItem>
-          );
-        }
-      )}
+      {Array.from(listState.weatherMap.values())
+        .filter((hour: Map<string, WeatherListItem>): boolean => {
+          // prevents partial days from appearing in the list
+          return hour.has("09") && hour.has("15");
+        })
+        .map(
+          (hour: Map<string, WeatherListItem>, index: number): JSX.Element => {
+            return (
+              <DayPreviewItem
+                hourList={Array.from(hour.values())}
+                weatherVars={listState.weatherConditions}
+                key={index}
+                sunriseTime={listState.sunriseTime}
+                sunsetTime={listState.sunsetTime}
+              ></DayPreviewItem>
+            );
+          }
+        )}
     </div>
   );
 }

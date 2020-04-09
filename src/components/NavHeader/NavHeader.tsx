@@ -4,6 +4,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import CityInput from "../CityInput/CityInput";
+import SettingsModal from "../SettingsModal/SettingsModal";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,6 +31,7 @@ export default function NavHeader(): JSX.Element {
             Inspect Next
           </Typography>
           <CityInput />
+          <SettingsModal />
         </Toolbar>
       </AppBar>
       {/* Render second toolbar to push hidden content down */}
