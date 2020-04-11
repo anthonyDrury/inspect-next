@@ -7,7 +7,7 @@ import { createBrowserHistory, History } from "history";
 import { Router, Route } from "react-router-dom";
 import { Routes } from "../../common/routes";
 
-test("renders Home Page", () => {
+test("renders Location Set Page", () => {
   const history: History = createBrowserHistory();
   history.push("/sydney/australia");
 
