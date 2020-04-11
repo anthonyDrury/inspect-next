@@ -72,7 +72,7 @@ function CityInput(props?: CityProps & ComponentProps<any>): JSX.Element {
       setState({
         ...state,
         inputDisplayed: false,
-        route: `/${cityStringArr[0]}/${cityStringArr[1]}`,
+        route: `/${cityStringArr[0]}/${cityStringArr[1]}/`,
       });
     }
   }
