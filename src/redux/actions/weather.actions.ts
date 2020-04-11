@@ -3,9 +3,11 @@ import { Action } from "../../types/redux.types";
 import moment from "moment";
 import { Location } from "../../types/location.type";
 import { Units } from "../../types/app.type";
+import { WeatherMap } from "../../types/weather.type";
 
 export function updateFiveDayForecast(
   forecast: FiveDayForecast,
+  mappedForecast: WeatherMap,
   location: Location,
   units: Units
 ): Action {
@@ -14,6 +16,7 @@ export function updateFiveDayForecast(
     payload: {
       fiveDay: {
         forecast,
+        mappedForecast,
         expiresAt: moment().add(1, "hour"),
         locationFor: location,
         unitsFor: units,

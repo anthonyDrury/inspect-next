@@ -5,6 +5,8 @@ import { WeatherListItem } from "./openWeather.types";
 export type WeatherPreviewType = {
   minTemp: number;
   maxTemp: number;
+  minWind: number;
+  maxWind: number;
   rainAmount: number;
   snowAmount: number;
   isViable: boolean;
@@ -49,6 +51,9 @@ export type InadvisableReason =
   | "Too wet";
 
 export type OptimalReason = "Optimal conditions";
+
+// Weather response mapped to [date, Map[hour, weatherListItem]]
+export type WeatherMap = Map<string, Map<string, WeatherListItem>>;
 
 // Weather conditions
 export type WeatherInspectionVariables = {

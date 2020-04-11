@@ -79,18 +79,25 @@ export function getWeatherInfo(
   sunsetTime: number
 ): WeatherPreviewType {
   // [min, max]
-  const minMaxArr: [number, number] = [999, -999];
+  const tempArr: [number, number] = [999, -999];
+  const windArr: [number, number] = [999, -999];
   let rainAmount: number = 0;
   let snowAmount: number = 0;
   let nine: WeatherListItem | undefined;
   let three: WeatherListItem | undefined;
 
   weatherList.forEach((listItem: WeatherListItem): void => {
-    if (listItem.main.temp_max > minMaxArr[1]) {
-      minMaxArr[1] = listItem.main.temp_max;
+    if (listItem.main.temp_max > tempArr[1]) {
+      tempArr[1] = listItem.main.temp_max;
     }
-    if (listItem.main.temp_min < minMaxArr[0]) {
-      minMaxArr[0] = listItem.main.temp_min;
+    if (listItem.main.temp_min < tempArr[0]) {
+      tempArr[0] = listItem.main.temp_min;
+    }
+    if (listItem.wind.speed < windArr[0]) {
+      windArr[0] = listItem.wind.speed;
+    }
+    if (listItem.wind.speed > windArr[1]) {
+      windArr[1] = listItem.wind.speed;
     }
     if (listItem.rain) {
       rainAmount += listItem.rain["3h"];
@@ -114,8 +121,10 @@ export function getWeatherInfo(
   );
 
   return {
-    minTemp: minMaxArr[0],
-    maxTemp: minMaxArr[1],
+    minTemp: tempArr[0],
+    maxTemp: tempArr[1],
+    minWind: windArr[0],
+    maxWind: windArr[1],
     rainAmount: Number(rainAmount.toFixed(0)),
     snowAmount: Number(snowAmount.toFixed(0)),
     isViable: viableTypes.isOptimal || viableTypes.isViable,

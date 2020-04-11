@@ -3,15 +3,15 @@ import { isDefined } from "./support";
 
 export enum Routes {
   HOME = "/",
-  DATE = "/date/:dateId",
-  FIVE_DAY = "/:cityName/:countryName",
+  DATE = "/:cityName/:countryName/:date/",
+  FIVE_DAY = "/:cityName/:countryName/",
   MONTHLY = "/monthly",
   LOCATION_NOT_FOUND = "/location-not-found",
 }
 
 // Used to encode city/country names for use in URL
-function safeUrlString(s: string): string {
-  return s.replace(" ", "-").trim();
+export function safeUrlString(s: string | undefined): string {
+  return s !== undefined ? s.replace(" ", "-").trim() : "";
 }
 
 // used to decode city/country names from URL
