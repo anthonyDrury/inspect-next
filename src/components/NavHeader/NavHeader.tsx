@@ -18,6 +18,11 @@ const useStyles = makeStyles((theme) => ({
     },
     textAlign: "left",
   },
+  search: {
+    [theme.breakpoints.down("sm")]: {
+      flexGrow: 1,
+    },
+  },
 }));
 
 export default function NavHeader(): JSX.Element {
@@ -30,7 +35,7 @@ export default function NavHeader(): JSX.Element {
           <Typography className={classes.title} variant="h6" noWrap>
             Inspect Next
           </Typography>
-          <CityInput />
+          <CityInput className={classes.search} />
           <SettingsModal />
         </Toolbar>
       </AppBar>

@@ -7,6 +7,8 @@ import { State } from "../types/redux.types";
 import { AutocompleteResponse, Prediction } from "../types/google.type";
 import { AutocompleteOption, Location } from "../types/location.type";
 import { Routes } from "../common/routes";
+import { WeatherMap } from "../types/weather.type";
+import { mapListToWeatherMap } from "../common/weather.support";
 
 export const API_URL: string =
   process.env.REACT_APP_API_URL || "http://localhost:80";
@@ -30,8 +32,14 @@ export async function getFiveDay(location: Location): Promise<void> {
     }
 
     await body.then((data: FiveDayForecast): void => {
+      const mappedForecast: WeatherMap = mapListToWeatherMap(data.list);
       store.dispatch(
-        updateFiveDayForecast(data, location, state.settings.units)
+        updateFiveDayForecast(
+          data,
+          mappedForecast,
+          location,
+          state.settings.units
+        )
       );
       store.dispatch(updateLoading(false));
     });

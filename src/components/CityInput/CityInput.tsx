@@ -1,4 +1,9 @@
-import React, { useState, SetStateAction, Dispatch } from "react";
+import React, {
+  useState,
+  SetStateAction,
+  Dispatch,
+  ComponentProps,
+} from "react";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete, { RenderInputParams } from "@material-ui/lab/Autocomplete";
 import { getAutocomplete } from "../../clients/server.client";
@@ -25,7 +30,7 @@ type CityProps = {
   updateLocation?: (d: Location | undefined) => void;
   state?: State;
 };
-function CityInput(props?: CityProps): JSX.Element {
+function CityInput(props?: CityProps & ComponentProps<any>): JSX.Element {
   const [state, setState]: [
     CityInputState,
     Dispatch<SetStateAction<CityInputState>>
@@ -66,7 +71,8 @@ function CityInput(props?: CityProps): JSX.Element {
       }
       setState({
         ...state,
-        route: `/${cityStringArr[0]}/${cityStringArr[1]}`,
+        inputDisplayed: false,
+        route: `/${cityStringArr[0]}/${cityStringArr[1]}/`,
       });
     }
   }
@@ -83,7 +89,7 @@ function CityInput(props?: CityProps): JSX.Element {
           });
         }}
       >
-        Find a city &nbsp;
+        {!state.inputDisplayed ? "Find a city" : null} &nbsp;
         <FontAwesomeIcon icon={faSearch} />
       </div>
 

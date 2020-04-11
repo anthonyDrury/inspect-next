@@ -2,6 +2,7 @@ import { Location } from "./location.type";
 import { FiveDayForecast } from "./openWeather.types";
 import { Moment } from "moment";
 import { Settings, Units } from "./app.type";
+import { WeatherMap } from "./weather.type";
 
 export type State = {
   fiveDay?: FiveDayState;
@@ -12,6 +13,7 @@ export type State = {
 
 export type FiveDayState = {
   forecast: FiveDayForecast;
+  mappedForecast: WeatherMap;
   expiresAt: Moment;
   locationFor: Location;
   unitsFor: Units;
