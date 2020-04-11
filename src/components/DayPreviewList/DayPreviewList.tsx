@@ -1,85 +1,21 @@
-import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
+import React from "react";
 import "./DayPreviewList.css";
 import { WeatherListItem } from "../../types/openWeather.types";
-import moment, { Moment } from "moment";
 import DayPreviewItem from "../DayPreviewItem/DayPreviewItem";
 import { WeatherInspectionVariables } from "../../types/weather.type";
-import { areConditionsEqual } from "../../common/support";
+import { Units } from "../../types/app.type";
 
 type DayPreviewListProps = {
-  list: WeatherListItem[];
-  cacheTime: moment.Moment;
+  weatherMap: Map<string, Map<string, WeatherListItem>>;
   weatherConditions: WeatherInspectionVariables;
   sunriseTime: number;
   sunsetTime: number;
+  units: Units;
 };
 function DayPreviewList(props: DayPreviewListProps): JSX.Element {
-  const [listState, setState]: [
-    {
-      weatherMap: Map<string, Map<string, WeatherListItem>>;
-      cacheTime: Moment;
-      weatherConditions: WeatherInspectionVariables;
-      sunriseTime: number;
-      sunsetTime: number;
-    },
-    Dispatch<
-      SetStateAction<{
-        weatherMap: Map<string, Map<string, WeatherListItem>>;
-        cacheTime: Moment;
-        weatherConditions: WeatherInspectionVariables;
-        sunriseTime: number;
-        sunsetTime: number;
-      }>
-    >
-  ] = useState({
-    weatherMap: mapListToWeatherMap(props.list),
-    cacheTime: props.cacheTime,
-    weatherConditions: props.weatherConditions,
-    sunriseTime: props.sunriseTime,
-    sunsetTime: props.sunsetTime,
-  });
-
-  useEffect((): void => {
-    if (
-      listState.cacheTime.toString() !== props.cacheTime.toString() ||
-      !areConditionsEqual(listState.weatherConditions, props.weatherConditions)
-    ) {
-      setState({
-        ...listState,
-        weatherMap: mapListToWeatherMap(props.list),
-        cacheTime: props.cacheTime,
-        weatherConditions: props.weatherConditions,
-      });
-    }
-  }, [props.cacheTime, props.list, props.weatherConditions, listState]);
-
-  function mapListToWeatherMap(
-    list: WeatherListItem[]
-  ): Map<string, Map<string, WeatherListItem>> {
-    // Map of Dates
-    // Includes Map of hour-times
-    const dayList: Map<string, Map<string, WeatherListItem>> = new Map();
-
-    list.forEach((item: WeatherListItem): void => {
-      const dateOf: string = moment(item.dt_txt).format("DD-MM");
-      const hourOf: string = moment(item.dt_txt).format("HH");
-
-      // If Date is not present, add
-      if (!dayList.has(dateOf)) {
-        dayList.set(dateOf, new Map([[hourOf, item]]));
-      } else {
-        // if Time is not present add
-        if (!dayList.get(dateOf)?.has(hourOf)) {
-          dayList.get(dateOf)?.set(hourOf, item);
-        }
-      }
-    });
-    return dayList;
-  }
-
   return (
     <div className="in-day-preview-list">
-      {Array.from(listState.weatherMap.values())
+      {Array.from(props.weatherMap.values())
         .filter((hour: Map<string, WeatherListItem>): boolean => {
           // prevents partial days from appearing in the list
           return hour.has("09") && hour.has("15");
@@ -89,10 +25,11 @@ function DayPreviewList(props: DayPreviewListProps): JSX.Element {
             return (
               <DayPreviewItem
                 hourList={Array.from(hour.values())}
-                weatherVars={listState.weatherConditions}
+                weatherVars={props.weatherConditions}
                 key={index}
-                sunriseTime={listState.sunriseTime}
-                sunsetTime={listState.sunsetTime}
+                sunriseTime={props.sunriseTime}
+                sunsetTime={props.sunsetTime}
+                units={props.units}
               ></DayPreviewItem>
             );
           }

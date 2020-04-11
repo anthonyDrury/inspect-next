@@ -1,0 +1,13 @@
+.in-hour-table {
+  &__row {
+    border: 1px solid black;
+
+    &:nth-child(even) {
+      background-color: lightgrey;
+    }
+
+    & + .in-hour-table__row {
+      border-top: none;
+    }
+  }
+}

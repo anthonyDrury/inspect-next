@@ -157,7 +157,7 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
                   <InputAdornment position="end">
                     {props?.state?.settings.units === "Imperial"
                       ? "metre/sec"
-                      : "mile/hr"}
+                      : "MPH"}
                   </InputAdornment>
                 ),
               }}
@@ -258,7 +258,7 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
                   <InputAdornment position="end">
                     {props?.state?.settings.units === "Imperial"
                       ? "metre/sec"
-                      : "mile/hr"}
+                      : "MPH"}
                   </InputAdornment>
                 ),
               }}

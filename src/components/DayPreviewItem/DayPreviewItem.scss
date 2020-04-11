@@ -1,6 +1,11 @@
 .in-day-preview-item {
   border: solid 1px black;
 
+  &:hover {
+    background-color: lightgrey;
+  }
+
+  // sub-components
   &__is-viable {
     margin-left: 0.5rem;
     flex: 100%;

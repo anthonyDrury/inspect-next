@@ -9,7 +9,7 @@ import { RouteComponentProps, withRouter } from "react-router-dom";
 import { mapFromUrlSafeLocation } from "../../common/routes";
 import { isFiveDayValid } from "../../common/support";
 
-export interface LocationSetProps extends RouteComponentProps<Location> {
+interface LocationSetProps extends RouteComponentProps<Location> {
   updateLocation?: (d: Location | undefined) => void;
   state?: State;
 }
@@ -41,11 +41,11 @@ function LocationSetPage(props?: LocationSetProps): JSX.Element {
       </h1>
       {props?.state?.fiveDay?.forecast && props?.state.fiveDay.expiresAt ? (
         <DayPreviewList
-          list={props?.state.fiveDay.forecast.list}
-          cacheTime={props?.state.fiveDay?.expiresAt}
+          weatherMap={props?.state.fiveDay.mappedForecast}
           weatherConditions={props?.state.settings.inspectionWeatherVars}
           sunsetTime={props?.state.fiveDay.forecast.city.sunset}
           sunriseTime={props?.state.fiveDay.forecast.city.sunrise}
+          units={props?.state.settings.units}
         ></DayPreviewList>
       ) : null}
     </div>
