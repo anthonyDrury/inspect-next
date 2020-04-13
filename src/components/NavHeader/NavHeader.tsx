@@ -19,8 +19,12 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "left",
   },
   search: {
-    [theme.breakpoints.down("sm")]: {
+    display: "flex",
+    alignContent: "center",
+    justifyContent: "flex-end",
+    [theme.breakpoints.down("xs")]: {
       flexGrow: 1,
+      justifyContent: "flex-start",
     },
   },
 }));
@@ -35,8 +39,12 @@ export default function NavHeader(): JSX.Element {
           <Typography className={classes.title} variant="h6" noWrap>
             Inspect Next
           </Typography>
-          <CityInput className={classes.search} />
-          <SettingsModal />
+          <div className={classes.search}>
+            <CityInput />
+          </div>
+          <div style={{ marginLeft: "1rem" }}>
+            <SettingsModal />
+          </div>
         </Toolbar>
       </AppBar>
       {/* Render second toolbar to push hidden content down */}

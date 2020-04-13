@@ -17,6 +17,7 @@ import { Location } from "../../types/location.type";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import If from "../If/If";
 
 type CityInputState = {
   options: AutocompleteOption[];
@@ -29,7 +30,9 @@ type CityInputState = {
 type CityProps = {
   updateLocation?: (d: Location | undefined) => void;
   state?: State;
+  open?: boolean;
 };
+
 function CityInput(props?: CityProps & ComponentProps<any>): JSX.Element {
   const [state, setState]: [
     CityInputState,
@@ -37,7 +40,7 @@ function CityInput(props?: CityProps & ComponentProps<any>): JSX.Element {
   ] = useState({
     options: [] as AutocompleteOption[],
     uuid: getUuid(),
-    inputDisplayed: false as boolean,
+    inputDisplayed: !!props?.open,
     inputFocus: false as boolean,
     loading: false as boolean,
   });
@@ -79,22 +82,25 @@ function CityInput(props?: CityProps & ComponentProps<any>): JSX.Element {
 
   return (
     <>
-      <div
-        style={{ cursor: "pointer" }}
-        onClick={(): void => {
-          setState({
-            ...state,
-            inputDisplayed: !state.inputDisplayed,
-            inputFocus: !state.inputDisplayed,
-          });
-        }}
-      >
-        {!state.inputDisplayed ? "Find a city" : null} &nbsp;
-        <FontAwesomeIcon icon={faSearch} />
-      </div>
+      <If condition={!props.open}>
+        <div
+          style={{ cursor: "pointer" }}
+          onClick={(): void => {
+            setState({
+              ...state,
+              inputDisplayed: !state.inputDisplayed,
+              inputFocus: !state.inputDisplayed,
+            });
+          }}
+        >
+          {!state.inputDisplayed ? "Find a city" : null} &nbsp;
+          <FontAwesomeIcon icon={faSearch} />
+        </div>
+      </If>
 
       {state.route ? <Redirect to={state.route} /> : null}
       <Autocomplete
+        color="primary"
         hidden={!state.inputDisplayed}
         className="in-city-input"
         id="city-input"
@@ -103,7 +109,7 @@ function CityInput(props?: CityProps & ComponentProps<any>): JSX.Element {
         getOptionLabel={(option: AutocompleteOption): string =>
           option.description
         }
-        style={{ width: 300 }}
+        style={{ width: 300, ...props.style }}
         multiple={undefined}
         onInputChange={(e: React.ChangeEvent<{}>): void => {
           getInputOnChange((e.target as any).value);
@@ -115,7 +121,7 @@ function CityInput(props?: CityProps & ComponentProps<any>): JSX.Element {
         renderInput={(params: RenderInputParams): JSX.Element => (
           <TextField
             {...params}
-            label="Select city"
+            label="Find a city"
             inputRef={(input: any | null): void | null => {
               if (isDefined(input) && state.inputFocus) {
                 input.focus();
