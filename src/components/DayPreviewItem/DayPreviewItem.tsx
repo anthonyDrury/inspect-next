@@ -130,7 +130,7 @@ function DayPreviewItem(props: {
           >
             <p className="in-text--extra-large in-day-preview-item__infoText">
               {moment(state.weatherPreview?.defaultWeather.dt_txt).format(
-                "DD-YYDD-YY"
+                "dddd"
               )}
             </p>
             <p className="in-text--large in-day-preview-item__infoText">

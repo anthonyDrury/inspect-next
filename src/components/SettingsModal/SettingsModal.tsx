@@ -1,4 +1,9 @@
-import React, { useState, SetStateAction, Dispatch } from "react";
+import React, {
+  useState,
+  SetStateAction,
+  Dispatch,
+  ComponentProps,
+} from "react";
 import { State, Action } from "../../types/redux.types";
 import { connect } from "react-redux";
 import "./SettingsModal.scss";
@@ -12,6 +17,7 @@ import {
 } from "../../redux/actions/settings.actions";
 import UnitsMod from "../UnitsMod/UnitsMod";
 import InspectionVarMod from "../InspectionVarMod/InspectionVarMod";
+import { SizeProp } from "@fortawesome/fontawesome-svg-core";
 
 type SettingsModalState = {
   expanded: boolean;
@@ -20,8 +26,11 @@ type SettingsModalProps = {
   updateSettings?: (d: Settings) => void;
   resetSettings?: () => void;
   state?: State;
+  size?: SizeProp;
 };
-function SettingsModal(props?: SettingsModalProps): JSX.Element {
+function SettingsModal(
+  props?: SettingsModalProps & ComponentProps<any>
+): JSX.Element {
   const [localState, setLocalState]: [
     SettingsModalState,
     Dispatch<SetStateAction<SettingsModalState>>
@@ -31,12 +40,18 @@ function SettingsModal(props?: SettingsModalProps): JSX.Element {
   return (
     <>
       <div
-        style={{ cursor: "pointer" }}
+        style={{
+          cursor: "pointer",
+          display: "flex",
+          alignContent: "center",
+          justifyContent: "center",
+          width: "100%",
+        }}
         onClick={(): void => {
           setLocalState({ expanded: !localState.expanded });
         }}
       >
-        <FontAwesomeIcon icon={faCog} />
+        <FontAwesomeIcon icon={faCog} size={props?.size ? props.size : "2x"} />
       </div>
 
       <Modal

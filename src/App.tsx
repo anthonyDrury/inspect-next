@@ -10,7 +10,13 @@ import NavHeader from "./components/NavHeader/NavHeader";
 import { State, Action } from "./types/redux.types";
 import LocationSetPage from "./pages/LocationSet/LocationSetPage";
 import LocationNotFoundPage from "./pages/locationNotFound/LocationNotFoundPage";
-import { ThemeProvider, createMuiTheme, Theme } from "@material-ui/core";
+import {
+  ThemeProvider,
+  createMuiTheme,
+  Theme,
+  CssBaseline,
+} from "@material-ui/core";
+import HomePage from "./pages/Home/HomePage";
 import { yellow, orange } from "@material-ui/core/colors";
 
 type AppProps = {
@@ -34,10 +40,11 @@ function App(props?: AppProps): JSX.Element {
     <div className="in-app">
       <Router history={history}>
         <ThemeProvider theme={theme}>
+          <CssBaseline />
           <NavHeader></NavHeader>
           <Switch>
             <Route exact path={Routes.HOME}>
-              <p>home</p>
+              <HomePage></HomePage>
             </Route>
             <Route exact path={Routes.FIVE_DAY}>
               <LocationSetPage />
