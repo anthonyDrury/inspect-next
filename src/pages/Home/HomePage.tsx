@@ -23,7 +23,10 @@ import SettingsModal from "../../components/SettingsModal/SettingsModal";
 function HomePage(): JSX.Element {
   return (
     <div className="in-home">
-      <Container style={{ backgroundColor: yellow[500], padding: "0.5rem 0" }}>
+      <Container
+        maxWidth={false}
+        style={{ backgroundColor: yellow[500], padding: "0.5rem 0" }}
+      >
         <Typography variant="h1" component="h1">
           Inspect Next
         </Typography>
@@ -60,7 +63,7 @@ function HomePage(): JSX.Element {
       </Container>
       <Divider style={{ backgroundColor: "black" }}></Divider>
       <WavyBorder></WavyBorder>
-      <Container style={{ backgroundColor: yellow[500] }}>
+      <Container maxWidth={false} style={{ backgroundColor: yellow[500] }}>
         <Typography variant="h3" component="h3">
           Easily determine which days will have the best conditions.
         </Typography>
@@ -135,7 +138,10 @@ function HomePage(): JSX.Element {
           borderBottom: "1px solid black",
         }}
       />
-      <Container style={{ backgroundColor: yellow[500], padding: "0.5rem 0" }}>
+      <Container
+        maxWidth={false}
+        style={{ backgroundColor: yellow[500], padding: "0.5rem 0" }}
+      >
         <Typography variant="h5" component="h5">
           Customizable, so you have full control over whether conditions are
           optimal or not.

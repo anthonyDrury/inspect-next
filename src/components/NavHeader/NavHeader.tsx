@@ -5,6 +5,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import CityInput from "../CityInput/CityInput";
 import SettingsModal from "../SettingsModal/SettingsModal";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,7 +38,9 @@ export default function NavHeader(): JSX.Element {
       <AppBar>
         <Toolbar>
           <Typography className={classes.title} variant="h6" noWrap>
-            Inspect Next
+            <Link style={{ color: "black", textDecoration: "none" }} to="/">
+              Inspect Next
+            </Link>
           </Typography>
           <div className={classes.search}>
             <CityInput />
