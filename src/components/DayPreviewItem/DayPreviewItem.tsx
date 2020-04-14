@@ -63,7 +63,7 @@ function DayPreviewItem(props: {
               ...state.weatherPreview,
               navigate: `${moment(
                 state.weatherPreview?.defaultWeather.dt_txt
-              ).format("MMMM-DD-YY")}`,
+              ).format("YYYY-MM-DD")}`,
             });
           }}
         >
@@ -82,7 +82,7 @@ function DayPreviewItem(props: {
                 ...state.weatherPreview,
                 navigate: `${moment(
                   state.weatherPreview?.defaultWeather.dt_txt
-                ).format("MMMM-DD-YY")}`,
+                ).format("YYYY-MM-DD")}`,
               });
             }}
           >
