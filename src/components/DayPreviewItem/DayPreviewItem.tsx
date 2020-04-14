@@ -14,10 +14,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import If from "../If/If";
-import { Grid, Button, Typography } from "@material-ui/core";
+import { Grid, Button, Typography, Tooltip } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
 import { Units } from "../../types/app.type";
-import { orange, green } from "@material-ui/core/colors";
+import { orange } from "@material-ui/core/colors";
 
 function DayPreviewItem(props: {
   hourList: WeatherListItem[];
@@ -94,32 +94,54 @@ function DayPreviewItem(props: {
             sm={2}
             className="in-day-preview-item__image-container"
           >
-            <img
-              src={`/weatherIcons/${state.weatherPreview?.defaultWeather.weather[0]?.icon?.replace(
-                "n",
-                "d"
-              )}@2x.png`}
-              alt="weather icon"
-            ></img>
+            <Tooltip
+              title={state.weatherPreview.defaultWeather.weather[0].description}
+              arrow
+            >
+              <img
+                src={`/weatherIcons/${state.weatherPreview?.defaultWeather.weather[0]?.icon?.replace(
+                  "n",
+                  "d"
+                )}@2x.png`}
+                alt="weather icon"
+              ></img>
+            </Tooltip>
             <div className="in-day-preview-item__is-viable">
-              {state.weatherPreview?.viableTypes.isViable ||
-              state.weatherPreview?.viableTypes.isOptimal ? (
-                <>
-                  <FontAwesomeIcon
-                    size="3x"
-                    color={
-                      state.weatherPreview?.viableTypes.isOptimal
-                        ? "green"
-                        : "black"
-                    }
-                    icon={faCheckCircle}
-                  />
-                </>
-              ) : (
-                <FontAwesomeIcon color="red" size="3x" icon={faTimesCircle} />
-              )}
+              <Tooltip
+                title={`${
+                  state.weatherPreview?.viableTypes.isOptimal
+                    ? "Optimal"
+                    : state.weatherPreview?.viableTypes.isViable
+                    ? "Viable, but not optimal,"
+                    : "Inadvisable"
+                } inspection time`}
+                arrow
+              >
+                <div>
+                  {state.weatherPreview?.viableTypes.isViable ||
+                  state.weatherPreview?.viableTypes.isOptimal ? (
+                    <FontAwesomeIcon
+                      size="3x"
+                      color={
+                        state.weatherPreview?.viableTypes.isOptimal
+                          ? "green"
+                          : "black"
+                      }
+                      icon={faCheckCircle}
+                    />
+                  ) : (
+                    <FontAwesomeIcon
+                      color="red"
+                      size="3x"
+                      icon={faTimesCircle}
+                    />
+                  )}
+                </div>
+              </Tooltip>
               <Typography component="p">
-                {state.weatherPreview?.viableTypes.reason}
+                {!state.weatherPreview.viableTypes.isOptimal
+                  ? state.weatherPreview?.viableTypes.reason
+                  : "Optimal"}
               </Typography>
             </div>
           </Grid>
@@ -133,11 +155,18 @@ function DayPreviewItem(props: {
             xs={8}
             sm={4}
           >
-            <p className="in-text--extra-large in-day-preview-item__infoText">
-              {moment(state.weatherPreview?.defaultWeather.dt_txt).format(
-                "dddd"
+            <Tooltip
+              title={moment(state.weatherPreview?.defaultWeather.dt_txt).format(
+                "YYYY-MMM-DD"
               )}
-            </p>
+              arrow
+            >
+              <p className="in-text--extra-large in-day-preview-item__infoText">
+                {moment(state.weatherPreview?.defaultWeather.dt_txt).format(
+                  "dddd"
+                )}
+              </p>
+            </Tooltip>
             <p className="in-text--large in-day-preview-item__infoText">
               {state.weatherPreview?.defaultWeather.weather[0].description}
             </p>
@@ -177,7 +206,9 @@ function DayPreviewItem(props: {
                 <If condition={state.weatherPreview?.nineAM !== undefined}>
                   <div className="in-day-preview-item__preview-container">
                     <p>9AM</p>
-                    <p>{`${state.weatherPreview?.nineAM!.main.temp}°`}</p>
+                    <p>{`${state.weatherPreview?.nineAM!.main.temp}° ${
+                      props.units === "Imperial" ? "F" : "C"
+                    }`}</p>
                     <p>{`${state.weatherPreview?.nineAM?.wind.speed} ${
                       props.units === "Imperial" ? "MPH" : "M/S"
                     }`}</p>
@@ -187,10 +218,12 @@ function DayPreviewItem(props: {
                 <If condition={state.weatherPreview?.threePM !== undefined}>
                   <div className="in-day-preview-item__preview-container">
                     <p>3PM</p>
-                    <p>{`${state.weatherPreview?.threePM!.main.temp}°`}</p>
-                    <p>{`${state.weatherPreview?.threePM?.wind.deg}° ${
-                      state.weatherPreview?.threePM?.wind.speed
-                    } ${props.units === "Imperial" ? "MPH" : "M/S"}`}</p>
+                    <p>{`${state.weatherPreview?.threePM!.main.temp}° ${
+                      props.units === "Imperial" ? "F" : "C"
+                    }`}</p>
+                    <p>{`${state.weatherPreview?.threePM?.wind.speed} ${
+                      props.units === "Imperial" ? "MPH" : "M/S"
+                    }`}</p>
                     <p>{`${state.weatherPreview?.threePM?.main.humidity}%`}</p>
                   </div>
                 </If>
@@ -207,22 +240,15 @@ function DayPreviewItem(props: {
                         <div className="in-day-preview-item__preview-container">
                           <p
                             className="in-text--strong"
-                            color={
-                              index <=
-                              state.weatherPreview?.viableTypes.optimalTimes
-                                .length -
-                                1
-                                ? green[500]
-                                : "black"
-                            }
+                            style={{
+                              color: time.isOptimal
+                                ? "green"
+                                : time.isViable
+                                ? "black"
+                                : "red",
+                            }}
                           >
-                            {state.weatherPreview?.viableTypes.isOptimal &&
-                            index <=
-                              state.weatherPreview?.viableTypes.optimalTimes
-                                .length -
-                                1
-                              ? "Optimal"
-                              : "Viable"}
+                            {time.isOptimal ? "Optimal" : "Viable"}
                           </p>
                           <p>temp:</p>
                           <p>wind:</p>
@@ -231,7 +257,9 @@ function DayPreviewItem(props: {
 
                         <div className="in-day-preview-item__preview-container">
                           <p>{moment(time.weather.dt_txt).format("h A")}</p>
-                          <p>{`${time.weather.main.temp}°`}</p>
+                          <p>{`${time.weather.main.temp}° ${
+                            props.units === "Imperial" ? "F" : "C"
+                          }`}</p>
                           <p>{`${time.weather.wind.speed} ${
                             props.units === "Imperial" ? "MPH" : "M/S"
                           }`}</p>

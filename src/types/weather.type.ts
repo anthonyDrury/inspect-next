@@ -57,7 +57,7 @@ export type InadvisableReason =
   | "Too windy"
   | "Too wet";
 
-export type OptimalReason = "Optimal conditions";
+export type OptimalReason = "Optimal";
 
 // Weather response mapped to [date, Map[hour, weatherListItem]]
 export type WeatherMap = Map<string, Map<string, WeatherListItem>>;
