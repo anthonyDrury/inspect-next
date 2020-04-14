@@ -7,7 +7,6 @@ import thunk from "redux-thunk";
 import { initialState } from "../../common/constant";
 import { State } from "../../types/redux.types";
 import reducer from "../reducers/reducer";
-import { isDefined } from "../../common/support";
 import { mapListToWeatherMap } from "../../common/weather.support";
 
 const composeEnhancers: typeof compose =
@@ -19,15 +18,19 @@ const composeEnhancers: typeof compose =
 // otherwise sets as default initial state
 function getStartState(): State {
   const storageItem: string | null = localStorage.getItem("inspectNextState");
-  const state: State = JSON.parse(storageItem!) as State;
+  const state: State | null = JSON.parse(storageItem!) as State;
 
-  // need to remap the forecast since Map objects do not parse through JSON
-  if (state.fiveDay?.forecast !== undefined) {
-    state.fiveDay.mappedForecast = mapListToWeatherMap(
-      state.fiveDay?.forecast.list
-    );
+  if (state !== null) {
+    // need to remap the forecast since Map objects do not parse through JSON
+    if (state.fiveDay?.forecast !== undefined) {
+      state.fiveDay.mappedForecast = mapListToWeatherMap(
+        state.fiveDay?.forecast.list
+      );
+    }
+    return state;
   }
-  return isDefined(storageItem) ? state : initialState;
+
+  return initialState;
 }
 
 function configureStore(): Store {
