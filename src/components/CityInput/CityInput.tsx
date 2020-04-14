@@ -84,7 +84,7 @@ function CityInput(props?: CityProps & ComponentProps<any>): JSX.Element {
     <>
       <If condition={!props.open}>
         <div
-          style={{ cursor: "pointer" }}
+          style={{ cursor: "pointer", alignItems: "center", display: "flex" }}
           onClick={(): void => {
             setState({
               ...state,
@@ -109,7 +109,7 @@ function CityInput(props?: CityProps & ComponentProps<any>): JSX.Element {
         getOptionLabel={(option: AutocompleteOption): string =>
           option.description
         }
-        style={{ width: 300, ...props.style }}
+        style={{ width: 225, ...props.style }}
         multiple={undefined}
         onInputChange={(e: React.ChangeEvent<{}>): void => {
           getInputOnChange((e.target as any).value);

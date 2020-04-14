@@ -8,7 +8,7 @@ export default function WavyBorder(): JSX.Element {
         backgroundColor: yellow[500],
         position: "relative",
         width: "100%",
-        paddingBottom: "30%",
+        paddingBottom: "20%",
         verticalAlign: "middle",
         overflow: "hidden",
       }}
@@ -24,7 +24,7 @@ export default function WavyBorder(): JSX.Element {
         }}
       >
         <path
-          d="M0,100 C150,200 350,0 500,100 L500,00 L0,0 Z"
+          d="M0,50 C150,150 250,0 500,50 L500,00 L0,0 Z"
           style={{ stroke: "none", fill: orange[500] }}
         ></path>
       </svg>
