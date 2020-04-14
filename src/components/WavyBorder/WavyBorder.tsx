@@ -11,6 +11,8 @@ export default function WavyBorder(): JSX.Element {
         paddingBottom: "20%",
         verticalAlign: "middle",
         overflow: "hidden",
+        marginTop: "-5%",
+        zIndex: -1,
       }}
     >
       <svg

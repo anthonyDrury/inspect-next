@@ -19,12 +19,19 @@ export type WeatherPreviewType = {
 };
 
 export type ViableWeather = {
-  optimalTimes: WeatherListItem[];
-  viableTimes: WeatherListItem[];
+  optimalTimes: WeatherValidity[];
+  viableTimes: WeatherValidity[];
+  times: WeatherValidity[];
   isViable: boolean;
   isOptimal: boolean;
-  isViableObj: WeatherReasonObj;
-  isOptimalObj: WeatherReasonObj;
+  reason: WeatherReason;
+};
+
+export type WeatherValidity = {
+  weather: WeatherListItem;
+  isViable: boolean;
+  isOptimal: boolean;
+  reason: WeatherReason;
 };
 
 export type WeatherReasonObj = {
@@ -38,10 +45,10 @@ export type WeatherReasonObj = {
 export type WeatherReason = OptimalReason | ViableReason | InadvisableReason;
 
 export type ViableReason =
-  | "A little cold"
-  | "A little hot"
-  | "A little windy"
-  | "A little wet";
+  | "A bit cold"
+  | "A bit hot"
+  | "A bit windy"
+  | "A bit wet";
 
 export type InadvisableReason =
   | "Too dark"

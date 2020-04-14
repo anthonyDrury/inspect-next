@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import "./DayPreviewItem.scss";
 import { WeatherListItem } from "../../types/openWeather.types";
 import moment from "moment";
-import { getWeatherInfo, getReason } from "../../common/support";
+import { getWeatherInfo } from "../../common/support";
 import {
   WeatherPreviewType,
   WeatherInspectionVariables,
+  WeatherValidity,
 } from "../../types/weather.type";
 import {
   faCheckCircle,
@@ -13,9 +14,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import If from "../If/If";
-import { Grid, Button } from "@material-ui/core";
+import { Grid, Button, Typography } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
 import { Units } from "../../types/app.type";
+import { orange, green } from "@material-ui/core/colors";
 
 function DayPreviewItem(props: {
   hourList: WeatherListItem[];
@@ -55,6 +57,7 @@ function DayPreviewItem(props: {
         <Grid
           container
           className="in-day-preview-item"
+          style={{ backgroundColor: orange[500] }}
           onClick={(): void => {
             setState({
               ...state.weatherPreview,
@@ -64,24 +67,33 @@ function DayPreviewItem(props: {
             });
           }}
         >
-          <Grid item container xs={12} justify="flex-end">
-            <Button
-              variant="contained"
-              color="primary"
-              style={{ marginRight: "0.5rem", marginTop: "0.5rem" }}
-              onClick={(): void => {
-                setState({
-                  ...state.weatherPreview,
-                  navigate: `${moment(
-                    state.weatherPreview?.defaultWeather.dt_txt
-                  ).format("MMMM-DD-YY")}`,
-                });
-              }}
-            >
-              View Day
-            </Button>
-          </Grid>
-          <Grid item xs={4} sm={2}>
+          <Button
+            variant="contained"
+            color="primary"
+            style={{
+              marginRight: "0.5rem",
+              marginTop: "0.25rem",
+              right: 0,
+              position: "absolute",
+              backgroundColor: orange[400],
+            }}
+            onClick={(): void => {
+              setState({
+                ...state.weatherPreview,
+                navigate: `${moment(
+                  state.weatherPreview?.defaultWeather.dt_txt
+                ).format("MMMM-DD-YY")}`,
+              });
+            }}
+          >
+            View Day
+          </Button>
+          <Grid
+            item
+            xs={4}
+            sm={2}
+            className="in-day-preview-item__image-container"
+          >
             <img
               src={`/weatherIcons/${state.weatherPreview?.defaultWeather.weather[0]?.icon?.replace(
                 "n",
@@ -106,16 +118,9 @@ function DayPreviewItem(props: {
               ) : (
                 <FontAwesomeIcon color="red" size="3x" icon={faTimesCircle} />
               )}
-              <p>
-                {state.weatherPreview?.viableTypes.isOptimal
-                  ? "Optimal conditions"
-                  : getReason(
-                      state.weatherPreview?.viableTypes.isViable
-                        ? state.weatherPreview?.viableTypes.isOptimalObj
-                        : state.weatherPreview?.viableTypes.isViableObj,
-                      state.weatherPreview?.viableTypes.isViable
-                    )}
-              </p>
+              <Typography component="p">
+                {state.weatherPreview?.viableTypes.reason}
+              </Typography>
             </div>
           </Grid>
 
@@ -196,11 +201,21 @@ function DayPreviewItem(props: {
                   ...state.weatherPreview?.viableTypes.optimalTimes,
                   ...state.weatherPreview?.viableTypes.viableTimes,
                 ].map(
-                  (time: WeatherListItem, index: number): JSX.Element => {
+                  (time: WeatherValidity, index: number): JSX.Element => {
                     return (
                       <If condition={index < 2} key={index}>
                         <div className="in-day-preview-item__preview-container">
-                          <p>
+                          <p
+                            className="in-text--strong"
+                            color={
+                              index <=
+                              state.weatherPreview?.viableTypes.optimalTimes
+                                .length -
+                                1
+                                ? green[500]
+                                : "black"
+                            }
+                          >
                             {state.weatherPreview?.viableTypes.isOptimal &&
                             index <=
                               state.weatherPreview?.viableTypes.optimalTimes
@@ -215,12 +230,12 @@ function DayPreviewItem(props: {
                         </div>
 
                         <div className="in-day-preview-item__preview-container">
-                          <p>{moment(time.dt_txt).format("h A")}</p>
-                          <p>{`${time.main.temp}°`}</p>
-                          <p>{`${time.wind.speed} ${
+                          <p>{moment(time.weather.dt_txt).format("h A")}</p>
+                          <p>{`${time.weather.main.temp}°`}</p>
+                          <p>{`${time.weather.wind.speed} ${
                             props.units === "Imperial" ? "MPH" : "M/S"
                           }`}</p>
-                          <p>{`${time.main.humidity}%`}</p>
+                          <p>{`${time.weather.main.humidity}%`}</p>
                         </div>
                       </If>
                     );

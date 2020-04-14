@@ -1,7 +1,16 @@
-.settingsModal__modalContainer {
-  max-width: 30rem;
-  margin: 0 auto;
-  padding: 1rem;
-  margin-top: 0rem;
-  padding-top: 0.25rem;
+.settingsModal__modal {
+  &-container {
+    max-width: 30rem;
+    margin: 0 auto;
+    padding: 1rem;
+    margin-top: 0rem;
+    padding-top: 0.25rem;
+    text-align: center;
+  }
+
+  &-actions {
+    + .settingsModal__modal-actions {
+      margin-left: 0.5rem;
+    }
+  }
 }

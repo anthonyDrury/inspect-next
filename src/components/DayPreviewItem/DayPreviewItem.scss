@@ -1,5 +1,7 @@
 .in-day-preview-item {
   border: solid 1px black;
+  margin-bottom: 0.5rem;
+  position: relative;
 
   &:hover {
     background-color: lightgrey;
@@ -12,12 +14,19 @@
     align-self: center;
     flex-direction: column;
     padding: 0.5rem;
+    border-top: 1px solid black;
+  }
+
+  &__image-container {
+    border-top-right-radius: 4px;
+    background-color: rgb(255, 167, 38);
+    border-bottom-right-radius: 4px;
   }
 
   &__infoText {
     margin: 0;
     margin-bottom: 0.25rem;
-
+    margin-top: 2rem;
     & + .in-day-preview-item__infoText {
       margin: 0;
     }
@@ -27,13 +36,19 @@
     line-height: 0.5rem;
     white-space: nowrap;
     text-align: left;
+    background-color: rgba(0, 0, 0, 0.1);
+    padding-left: 0.25rem;
+    margin: 0.5rem 0;
 
-    & + .in-day-preview-item__preview-container {
-      margin-left: 0.5rem;
+    &:first-of-type {
+      border-bottom-left-radius: 4px;
+      border-top-left-radius: 4px;
     }
-  }
 
-  & + .in-day-preview-item {
-    border-top: none;
+    &:last-of-type {
+      padding-right: 0.25rem;
+      border-bottom-right-radius: 4px;
+      border-top-right-radius: 4px;
+    }
   }
 }

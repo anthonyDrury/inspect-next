@@ -8,6 +8,8 @@ import { getFiveDay } from "../../clients/server.client";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { mapFromUrlSafeLocation } from "../../common/routes";
 import { isFiveDayValid } from "../../common/support";
+import { Typography, Container } from "@material-ui/core";
+import { yellow } from "@material-ui/core/colors";
 
 interface LocationSetProps extends RouteComponentProps<Location> {
   updateLocation?: (d: Location | undefined) => void;
@@ -34,20 +36,24 @@ function LocationSetPage(props?: LocationSetProps): JSX.Element {
   });
 
   return (
-    <div className="in-home">
-      <h1>
-        Forecast for {props?.state?.fiveDay?.locationFor?.cityName},{" "}
-        {props?.state?.fiveDay?.locationFor?.countryName}
-      </h1>
-      {props?.state?.fiveDay?.forecast && props?.state.fiveDay.expiresAt ? (
-        <DayPreviewList
-          weatherMap={props?.state.fiveDay.mappedForecast}
-          weatherConditions={props?.state.settings.inspectionWeatherVars}
-          sunsetTime={props?.state.fiveDay.forecast.city.sunset}
-          sunriseTime={props?.state.fiveDay.forecast.city.sunrise}
-          units={props?.state.settings.units}
-        ></DayPreviewList>
-      ) : null}
+    <div className="in-location">
+      <Container maxWidth={false} style={{ backgroundColor: yellow[500] }}>
+        <Typography variant="h3" component="h1">
+          Forecast for
+          <br />
+          {props?.state?.fiveDay?.locationFor?.cityName},{" "}
+          {props?.state?.fiveDay?.locationFor?.countryName}
+        </Typography>
+        {props?.state?.fiveDay !== undefined ? (
+          <DayPreviewList
+            weatherMap={props!.state!.fiveDay?.mappedForecast}
+            weatherConditions={props!.state!.settings.inspectionWeatherVars}
+            sunsetTime={props!.state!.fiveDay!.forecast.city.sunset}
+            sunriseTime={props!.state!.fiveDay!.forecast.city.sunrise}
+            units={props!.state!.settings.units}
+          ></DayPreviewList>
+        ) : null}
+      </Container>
     </div>
   );
 }
