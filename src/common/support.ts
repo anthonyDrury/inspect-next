@@ -206,6 +206,9 @@ export function getReason(
   weatherReason: WeatherReasonObj,
   valid: boolean
 ): WeatherReason {
+  if (!weatherReason.isDaylight) {
+    return "Too dark";
+  }
   if (weatherReason.isTooCold) {
     return valid ? "A bit cold" : "Too cold";
   }
@@ -219,7 +222,7 @@ export function getReason(
   if (weatherReason.isTooWindy) {
     return valid ? "A bit windy" : "Too windy";
   }
-  return "Optimal conditions";
+  return "Optimal";
 }
 
 export function getViableWeatherSlots(
@@ -268,7 +271,7 @@ export function getViableWeatherSlots(
     } else if (getIsWeatherValid(isViableObjArr[index])) {
       viableTimes.push({
         weather: listItem,
-        isOptimal: true,
+        isOptimal: false,
         isViable: true,
         reason: getReason(
           isWeatherOptimal(listItem, weatherVars, sunriseTime, sunsetTime),
@@ -347,7 +350,7 @@ export function getMainReasonForDay(
   if (tooWet > tooCold && tooWet > tooWindy && tooWet > tooHot) {
     return viable ? "A bit wet" : "Too wet";
   }
-  return "Optimal conditions";
+  return "Optimal";
 }
 
 export function getCountryCode(countryName: string): string | undefined {

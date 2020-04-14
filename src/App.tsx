@@ -1,6 +1,6 @@
 import React, { useEffect, Dispatch } from "react";
 import "./App.css";
-import "./styles/Typography.css";
+import "./styles/Typography.scss";
 import { Switch, Route, Router } from "react-router-dom";
 import { createBrowserHistory, History } from "history";
 import { Routes } from "./common/routes";
