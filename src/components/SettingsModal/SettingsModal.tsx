@@ -18,6 +18,7 @@ import {
 import UnitsMod from "../UnitsMod/UnitsMod";
 import InspectionVarMod from "../InspectionVarMod/InspectionVarMod";
 import { SizeProp } from "@fortawesome/fontawesome-svg-core";
+import { grey } from "@material-ui/core/colors";
 
 type SettingsModalState = {
   expanded: boolean;
@@ -68,7 +69,10 @@ function SettingsModal(
         }}
       >
         <Fade in={localState.expanded}>
-          <Paper className="settingsModal__modalContainer">
+          <Paper
+            className="settingsModal__modal-container"
+            style={{ backgroundColor: grey[100] }}
+          >
             <h2>Settings</h2>
             <Grid container spacing={3}>
               <Grid item xs={12}>
@@ -84,14 +88,16 @@ function SettingsModal(
                       props.resetSettings();
                     }
                   }}
+                  className="settingsModal__modal-actions"
                   color="secondary"
                   variant="contained"
                 >
-                  reset to default
+                  reset
                 </Button>
                 <Button
                   onClick={(): void => setLocalState({ expanded: false })}
                   color="secondary"
+                  className="settingsModal__modal-actions"
                   variant="contained"
                 >
                   close

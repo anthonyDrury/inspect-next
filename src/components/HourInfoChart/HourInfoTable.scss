@@ -3,7 +3,7 @@
     border: 1px solid black;
 
     &:nth-child(even) {
-      background-color: lightgrey;
+      background-color: rgba(0, 0, 0, 0.1);
     }
 
     & + .in-hour-table__row {

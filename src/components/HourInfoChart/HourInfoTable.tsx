@@ -1,48 +1,23 @@
 import React from "react";
-import { WeatherListItem } from "../../types/openWeather.types";
 import { Units } from "../../types/app.type";
 import moment from "moment";
-import { Grid } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheckCircle,
   faTimesCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import "./HourInfoTable.scss";
-import { WeatherPreviewType } from "../../types/weather.type";
+import { WeatherValidity, ViableWeather } from "../../types/weather.type";
+import orange from "@material-ui/core/colors/orange";
 
 type HourInfoProps = {
-  weatherHourList: WeatherListItem[] | undefined;
-  weatherPreview: WeatherPreviewType | undefined;
+  weatherPreview: ViableWeather | undefined;
   units: Units | undefined;
 };
 function HourInfoTable(props?: HourInfoProps): JSX.Element {
-  function isHourViable(hour: string): boolean {
-    if (props?.weatherPreview?.viableTypes.viableTimes !== undefined) {
-      return (
-        props?.weatherPreview?.viableTypes.viableTimes?.findIndex(
-          (value: WeatherListItem): boolean =>
-            hour === moment(value.dt_txt).format("hh A")
-        ) === 0
-      );
-    }
-    return false;
-  }
-
-  function isHourOptimal(hour: string): boolean {
-    if (props?.weatherPreview?.viableTypes.optimalTimes !== undefined) {
-      return (
-        props?.weatherPreview?.viableTypes.optimalTimes?.findIndex(
-          (value: WeatherListItem): boolean =>
-            hour === moment(value.dt_txt).format("hh A")
-        ) === 0
-      );
-    }
-    return false;
-  }
-
-  function getHourGridItem(weatherItem: WeatherListItem): JSX.Element {
-    const hour: string = moment(weatherItem.dt_txt).format("hh A");
+  function getHourGridItem(weatherItem: WeatherValidity): JSX.Element {
+    const hour: string = moment(weatherItem.weather.dt_txt).format("hh A");
     return (
       <Grid
         item
@@ -57,32 +32,43 @@ function HourInfoTable(props?: HourInfoProps): JSX.Element {
           <p>{hour}</p>
         </Grid>
         <Grid item xs={2} className="in-hour-table__row-item">
-          {isHourOptimal(hour) ? (
+          {weatherItem.isOptimal ? (
             <FontAwesomeIcon size="lg" color="green" icon={faCheckCircle} />
-          ) : isHourViable(hour) ? (
+          ) : weatherItem.isViable ? (
             <FontAwesomeIcon size="lg" color="black" icon={faCheckCircle} />
           ) : (
             <FontAwesomeIcon size="lg" color="red" icon={faTimesCircle} />
           )}
+          <Typography className="in-text--strong" component="p">
+            {weatherItem.reason}
+          </Typography>
         </Grid>
         <Grid item xs={3} className="in-hour-table__row-item">
-          {weatherItem.main.temp}°{props?.units === "Imperial" ? "F" : "C"}
+          {weatherItem.weather.main.temp}°
+          {props?.units === "Imperial" ? "F" : "C"}
         </Grid>
         <Grid item xs={2} className="in-hour-table__row-item">
-          {weatherItem.rain !== undefined ? weatherItem.rain["3h"] : 0} mm
+          {weatherItem.weather.rain !== undefined
+            ? weatherItem.weather.rain["3h"]
+            : 0}{" "}
+          mm
         </Grid>
         <Grid item xs={3} className="in-hour-table__row-item">
-          {weatherItem.wind.speed} {props?.units === "Imperial" ? "MPH" : "m/s"}
+          {weatherItem.weather.wind.speed}{" "}
+          {props?.units === "Imperial" ? "MPH" : "m/s"}
         </Grid>
         <Grid item xs={2} className="in-hour-table__row-item">
-          {weatherItem.snow !== undefined ? weatherItem.snow["3h"] : 0} mm
+          {weatherItem.weather.snow !== undefined
+            ? weatherItem.weather.snow["3h"]
+            : 0}{" "}
+          mm
         </Grid>
       </Grid>
     );
   }
 
   return (
-    <Grid container direction="column">
+    <Grid container direction="column" style={{ backgroundColor: orange[500] }}>
       <Grid
         item
         container
@@ -93,25 +79,37 @@ function HourInfoTable(props?: HourInfoProps): JSX.Element {
         className="in-hour-table__row"
       >
         <Grid item xs={2} className="in-hour-table__row-item">
-          Time
+          <Typography className="in-text--strong" component="p">
+            Time
+          </Typography>
         </Grid>
         <Grid item xs={2} className="in-hour-table__row-item">
-          Inspect
+          <Typography className="in-text--strong" component="p">
+            Inspect
+          </Typography>
         </Grid>
         <Grid item xs={3} className="in-hour-table__row-item">
-          Temp
+          <Typography className="in-text--strong" component="p">
+            Temp
+          </Typography>
         </Grid>
         <Grid item xs={2} className="in-hour-table__row-item">
-          Rain
+          <Typography className="in-text--strong" component="p">
+            Rain
+          </Typography>
         </Grid>
         <Grid item xs={3} className="in-hour-table__row-item">
-          Wind
+          <Typography className="in-text--strong" component="p">
+            Wind
+          </Typography>
         </Grid>
         <Grid item xs={2} className="in-hour-table__row-item">
-          Snow
+          <Typography className="in-text--strong" component="p">
+            Snow
+          </Typography>
         </Grid>
       </Grid>
-      {props?.weatherHourList?.map(getHourGridItem)}
+      {props?.weatherPreview?.times?.map(getHourGridItem)}
     </Grid>
   );
 }

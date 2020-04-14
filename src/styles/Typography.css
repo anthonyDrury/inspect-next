@@ -5,3 +5,7 @@
 .in-text--large {
   font-size: 1.25rem;
 }
+
+.in-text--strong {
+  font-weight: 700;
+}
