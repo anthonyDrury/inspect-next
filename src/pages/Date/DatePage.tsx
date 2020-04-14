@@ -3,20 +3,21 @@ import { State, Action } from "../../types/redux.types";
 import { withRouter, RouteComponentProps, Redirect } from "react-router-dom";
 import { Location } from "../../types/location.type";
 import { connect } from "react-redux";
-import { getWeatherInfo, getReason, isStateValid } from "../../common/support";
+import { getWeatherInfo, isStateValid } from "../../common/support";
 import { mapFromUrlSafeLocation, safeUrlString } from "../../common/routes";
 import { getFiveDay } from "../../clients/server.client";
 import { updateLocation } from "../../redux/actions/location.actions";
 import moment from "moment";
 import { WeatherPreviewType } from "../../types/weather.type";
 import { WeatherListItem } from "../../types/openWeather.types";
-import { Grid, Button } from "@material-ui/core";
+import { Grid, Button, Typography } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheckCircle,
   faTimesCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import HourInfoTable from "../../components/HourInfoChart/HourInfoTable";
+import yellow from "@material-ui/core/colors/yellow";
 
 interface DatePageProps
   extends RouteComponentProps<Location & { date: string }> {
@@ -95,7 +96,7 @@ function DatePage(props?: DatePageProps): JSX.Element {
 
   return (
     <>
-      <Grid container>
+      <Grid container style={{ backgroundColor: yellow[500] }}>
         <Grid item xs={12}>
           <Button
             variant="contained"
@@ -116,129 +117,124 @@ function DatePage(props?: DatePageProps): JSX.Element {
           >
             Back to week
           </Button>
-          <h1>
+          <Typography variant="h3" component="h1" style={{ marginTop: "3rem" }}>
             {moment(localState.weatherPreview?.defaultWeather.dt_txt).format(
               "dddd MMMM-DD"
             )}
-          </h1>
-          <h2>
+          </Typography>
+          <Typography variant="h4" component="h2">
             {props?.state?.location?.cityName},{" "}
             {props?.state?.location?.countryName}
-          </h2>
+          </Typography>
         </Grid>
+        {localState.navigate ? (
+          <Redirect exact={false} to={localState.navigate} />
+        ) : (
+          <>
+            <Grid
+              container
+              alignContent="center"
+              justify="center"
+              direction="column"
+              item
+              xs={6}
+              sm={4}
+            >
+              <img
+                src={`/weatherIcons/${localState.weatherPreview?.defaultWeather.weather[0]?.icon?.replace(
+                  "n",
+                  "d"
+                )}@2x.png`}
+                alt="weather icon"
+              ></img>
+              <p>
+                {
+                  localState?.weatherPreview?.defaultWeather.weather[0]
+                    .description
+                }
+              </p>
+            </Grid>
+            <Grid
+              item
+              container
+              alignContent="center"
+              justify="center"
+              direction="column"
+              xs={6}
+              sm={2}
+            >
+              <div>
+                <p>
+                  {localState?.weatherPreview?.viableTypes.isOptimal
+                    ? "Is Optimal"
+                    : localState?.weatherPreview?.viableTypes.isViable
+                    ? "Is Viable"
+                    : "Inadvisable to inspect"}
+                </p>
+                {localState?.weatherPreview?.viableTypes.isViable ||
+                localState?.weatherPreview?.viableTypes.isOptimal ? (
+                  <>
+                    <FontAwesomeIcon
+                      size="3x"
+                      color={
+                        localState?.weatherPreview?.viableTypes.isOptimal
+                          ? "green"
+                          : "black"
+                      }
+                      icon={faCheckCircle}
+                    />
+                  </>
+                ) : (
+                  <FontAwesomeIcon color="red" size="3x" icon={faTimesCircle} />
+                )}
+                <p>
+                  {!localState?.weatherPreview?.viableTypes.isOptimal &&
+                  localState?.weatherPreview !== undefined
+                    ? localState.weatherPreview!.viableTypes.reason
+                    : null}
+                </p>
+              </div>
+            </Grid>
+
+            <Grid
+              item
+              container
+              alignContent="center"
+              justify="center"
+              direction="column"
+              xs={12}
+              sm={6}
+              style={{
+                textAlign: "left",
+                lineHeight: 0,
+              }}
+            >
+              <p className="in-text--large in-date-view-item__infoText">
+                {localState?.weatherPreview?.minTemp}° -{" "}
+                {localState?.weatherPreview?.maxTemp}°
+              </p>
+              <p className="in-text--large in-date-view-item__infoText">
+                wind: {localState?.weatherPreview?.minWind} -{" "}
+                {localState?.weatherPreview?.minWind}
+              </p>
+              <p className="in-date-view-item__infoText">
+                rain: {`${localState?.weatherPreview?.rainAmount}mm`}
+              </p>
+              <p className="in-date-view-item__infoText">
+                snow: {`${localState?.weatherPreview?.snowAmount}mm`}
+              </p>
+            </Grid>
+            <Grid item xs={12}>
+              {localState.weatherPreview !== undefined ? (
+                <HourInfoTable
+                  weatherPreview={localState.weatherPreview!.viableTypes}
+                  units={props?.state?.settings.units}
+                />
+              ) : null}
+            </Grid>
+          </>
+        )}
       </Grid>
-
-      {localState.navigate ? (
-        <Redirect exact={false} to={localState.navigate} />
-      ) : (
-        <Grid container>
-          <Grid
-            container
-            alignContent="center"
-            justify="center"
-            direction="column"
-            item
-            xs={6}
-            sm={4}
-          >
-            <img
-              src={`/weatherIcons/${localState.weatherPreview?.defaultWeather.weather[0]?.icon?.replace(
-                "n",
-                "d"
-              )}@2x.png`}
-              alt="weather icon"
-            ></img>
-            <p>
-              {
-                localState?.weatherPreview?.defaultWeather.weather[0]
-                  .description
-              }
-            </p>
-          </Grid>
-          <Grid
-            item
-            container
-            alignContent="center"
-            justify="center"
-            direction="column"
-            xs={6}
-            sm={2}
-          >
-            <div>
-              <p>
-                {localState?.weatherPreview?.viableTypes.isOptimal
-                  ? "Is Optimal"
-                  : localState?.weatherPreview?.viableTypes.isViable
-                  ? "Is Viable"
-                  : "Inadvisable to inspect"}
-              </p>
-              {localState?.weatherPreview?.viableTypes.isViable ||
-              localState?.weatherPreview?.viableTypes.isOptimal ? (
-                <>
-                  <FontAwesomeIcon
-                    size="3x"
-                    color={
-                      localState?.weatherPreview?.viableTypes.isOptimal
-                        ? "green"
-                        : "black"
-                    }
-                    icon={faCheckCircle}
-                  />
-                </>
-              ) : (
-                <FontAwesomeIcon color="red" size="3x" icon={faTimesCircle} />
-              )}
-              <p>
-                {!localState?.weatherPreview?.viableTypes.isOptimal &&
-                localState?.weatherPreview !== undefined
-                  ? getReason(
-                      localState?.weatherPreview?.viableTypes.isViable
-                        ? localState.weatherPreview!.viableTypes.isOptimalObj
-                        : localState.weatherPreview!.viableTypes.isViableObj,
-                      localState?.weatherPreview!.viableTypes.isViable
-                    )
-                  : null}
-              </p>
-            </div>
-          </Grid>
-
-          <Grid
-            item
-            container
-            alignContent="center"
-            justify="center"
-            direction="column"
-            xs={12}
-            sm={6}
-            style={{
-              textAlign: "left",
-              lineHeight: 0,
-            }}
-          >
-            <p className="in-text--large in-date-view-item__infoText">
-              {localState?.weatherPreview?.minTemp}° -{" "}
-              {localState?.weatherPreview?.maxTemp}°
-            </p>
-            <p className="in-text--large in-date-view-item__infoText">
-              wind: {localState?.weatherPreview?.minWind} -{" "}
-              {localState?.weatherPreview?.minWind}
-            </p>
-            <p className="in-date-view-item__infoText">
-              rain: {`${localState?.weatherPreview?.rainAmount}mm`}
-            </p>
-            <p className="in-date-view-item__infoText">
-              snow: {`${localState?.weatherPreview?.snowAmount}mm`}
-            </p>
-          </Grid>
-          <Grid item xs={12}>
-            <HourInfoTable
-              weatherHourList={localState.hourList}
-              weatherPreview={localState.weatherPreview}
-              units={props?.state?.settings.units}
-            />
-          </Grid>
-        </Grid>
-      )}
     </>
   );
 }

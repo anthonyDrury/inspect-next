@@ -27,11 +27,11 @@ function HomePage(): JSX.Element {
         maxWidth={false}
         style={{ backgroundColor: yellow[500], padding: "0.5rem 0" }}
       >
-        <Typography variant="h1" component="h1">
+        <Typography variant="h2" component="h1">
           Inspect Next
         </Typography>
-        <Typography variant="h2" component="h2">
-          Built by a beekeeper, for beekeepers
+        <Typography variant="h4" component="h2">
+          For Beekeepers
         </Typography>
         <Typography component="p">
           Wondering when the best weather conditions to inspect your beehive
@@ -64,7 +64,7 @@ function HomePage(): JSX.Element {
       <Divider style={{ backgroundColor: "black" }}></Divider>
       <WavyBorder></WavyBorder>
       <Container maxWidth={false} style={{ backgroundColor: yellow[500] }}>
-        <Typography variant="h3" component="h3">
+        <Typography variant="h4" component="h3">
           Easily determine which days will have the best conditions.
         </Typography>
 
@@ -143,8 +143,8 @@ function HomePage(): JSX.Element {
         style={{ backgroundColor: yellow[500], padding: "0.5rem 0" }}
       >
         <Typography variant="h5" component="h5">
-          Customizable, so you have full control over whether conditions are
-          optimal or not.
+          Customizable, so you have full control.
+          <br /> Decide for yourself whether conditions are optimal or not.
         </Typography>
         <Card
           style={{

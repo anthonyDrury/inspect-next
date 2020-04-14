@@ -43,7 +43,7 @@ export function doLocationMatch(l1?: Location, l2?: Location): boolean {
   return (
     isDefined(l1) &&
     isDefined(l2) &&
-    stringFromSafeUrl(l1!.cityName) === l2!.cityName &&
-    stringFromSafeUrl(l1!.countryName) === l2!.countryName
+    stringFromSafeUrl(l1!.cityName) === stringFromSafeUrl(l2!.cityName) &&
+    stringFromSafeUrl(l1!.countryName) === stringFromSafeUrl(l2!.countryName)
   );
 }
