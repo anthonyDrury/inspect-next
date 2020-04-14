@@ -97,7 +97,7 @@ function DatePage(props?: DatePageProps): JSX.Element {
   return (
     <>
       <Grid container style={{ backgroundColor: yellow[500] }}>
-        <Grid item xs={12}>
+        <Grid item xs={12} style={{ marginBottom: "0.5rem" }}>
           <Button
             variant="contained"
             color="primary"
@@ -134,12 +134,21 @@ function DatePage(props?: DatePageProps): JSX.Element {
             <Grid
               container
               alignContent="center"
-              justify="center"
+              justify="flex-start"
               direction="column"
               item
               xs={6}
               sm={4}
+              style={{
+                borderTop: " 1px solid black",
+              }}
             >
+              <Typography variant="h6" component="p">
+                {
+                  localState?.weatherPreview?.defaultWeather.weather[0]
+                    .description
+                }
+              </Typography>
               <img
                 src={`/weatherIcons/${localState.weatherPreview?.defaultWeather.weather[0]?.icon?.replace(
                   "n",
@@ -147,53 +156,46 @@ function DatePage(props?: DatePageProps): JSX.Element {
                 )}@2x.png`}
                 alt="weather icon"
               ></img>
-              <p>
-                {
-                  localState?.weatherPreview?.defaultWeather.weather[0]
-                    .description
-                }
-              </p>
             </Grid>
             <Grid
               item
               container
               alignContent="center"
-              justify="center"
+              justify="space-between"
               direction="column"
               xs={6}
               sm={2}
+              style={{ borderTop: " 1px solid black" }}
             >
-              <div>
-                <p>
-                  {localState?.weatherPreview?.viableTypes.isOptimal
-                    ? "Is Optimal"
-                    : localState?.weatherPreview?.viableTypes.isViable
-                    ? "Is Viable"
-                    : "Inadvisable to inspect"}
-                </p>
-                {localState?.weatherPreview?.viableTypes.isViable ||
-                localState?.weatherPreview?.viableTypes.isOptimal ? (
-                  <>
-                    <FontAwesomeIcon
-                      size="3x"
-                      color={
-                        localState?.weatherPreview?.viableTypes.isOptimal
-                          ? "green"
-                          : "black"
-                      }
-                      icon={faCheckCircle}
-                    />
-                  </>
-                ) : (
-                  <FontAwesomeIcon color="red" size="3x" icon={faTimesCircle} />
-                )}
-                <p>
-                  {!localState?.weatherPreview?.viableTypes.isOptimal &&
-                  localState?.weatherPreview !== undefined
-                    ? localState.weatherPreview!.viableTypes.reason
-                    : null}
-                </p>
-              </div>
+              <Typography variant="h6" component="p">
+                {localState?.weatherPreview?.viableTypes.isOptimal
+                  ? "Optimal"
+                  : localState?.weatherPreview?.viableTypes.isViable
+                  ? "Viable"
+                  : "Inadvisable"}
+              </Typography>
+              {localState?.weatherPreview?.viableTypes.isViable ||
+              localState?.weatherPreview?.viableTypes.isOptimal ? (
+                <>
+                  <FontAwesomeIcon
+                    size="3x"
+                    color={
+                      localState?.weatherPreview?.viableTypes.isOptimal
+                        ? "green"
+                        : "black"
+                    }
+                    icon={faCheckCircle}
+                  />
+                </>
+              ) : (
+                <FontAwesomeIcon color="red" size="3x" icon={faTimesCircle} />
+              )}
+              <Typography component="p">
+                {!localState?.weatherPreview?.viableTypes.isOptimal &&
+                localState?.weatherPreview !== undefined
+                  ? localState.weatherPreview!.viableTypes.reason
+                  : null}
+              </Typography>
             </Grid>
 
             <Grid
@@ -205,6 +207,7 @@ function DatePage(props?: DatePageProps): JSX.Element {
               xs={12}
               sm={6}
               style={{
+                borderTop: " 1px solid black",
                 textAlign: "left",
                 lineHeight: 0,
               }}

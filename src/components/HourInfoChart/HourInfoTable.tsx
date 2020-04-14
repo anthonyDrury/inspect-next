@@ -1,7 +1,7 @@
 import React from "react";
 import { Units } from "../../types/app.type";
 import moment from "moment";
-import { Grid, Typography } from "@material-ui/core";
+import { Grid, Typography, Tooltip } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheckCircle,
@@ -32,16 +32,27 @@ function HourInfoTable(props?: HourInfoProps): JSX.Element {
           <p>{hour}</p>
         </Grid>
         <Grid item xs={2} className="in-hour-table__row-item">
-          {weatherItem.isOptimal ? (
-            <FontAwesomeIcon size="lg" color="green" icon={faCheckCircle} />
-          ) : weatherItem.isViable ? (
-            <FontAwesomeIcon size="lg" color="black" icon={faCheckCircle} />
-          ) : (
-            <FontAwesomeIcon size="lg" color="red" icon={faTimesCircle} />
-          )}
-          <Typography className="in-text--strong" component="p">
-            {weatherItem.reason}
-          </Typography>
+          <Tooltip
+            title={`${
+              weatherItem.isOptimal
+                ? "Optimal"
+                : weatherItem.isViable
+                ? "Viable, but not optimal,"
+                : "Inadvisable"
+            } inspection time`}
+            arrow
+          >
+            <div>
+              {weatherItem.isOptimal ? (
+                <FontAwesomeIcon size="lg" color="green" icon={faCheckCircle} />
+              ) : weatherItem.isViable ? (
+                <FontAwesomeIcon size="lg" color="black" icon={faCheckCircle} />
+              ) : (
+                <FontAwesomeIcon size="lg" color="red" icon={faTimesCircle} />
+              )}
+            </div>
+          </Tooltip>
+          <Typography component="p">{weatherItem.reason}</Typography>
         </Grid>
         <Grid item xs={3} className="in-hour-table__row-item">
           {weatherItem.weather.main.temp}°
