@@ -9,7 +9,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "./HourInfoTable.scss";
 import { WeatherValidity, ViableWeather } from "../../types/weather.type";
-import orange from "@material-ui/core/colors/orange";
 
 type HourInfoProps = {
   weatherPreview: ViableWeather | undefined;
@@ -83,15 +82,7 @@ function HourInfoTable(props?: HourInfoProps): JSX.Element {
   }
 
   return (
-    <Grid
-      container
-      direction="column"
-      style={{
-        backgroundColor: orange[500],
-        maxWidth: "50rem",
-        margin: "0 auto",
-      }}
-    >
+    <Grid container direction="column" className="in-hour-table">
       <Grid
         item
         container

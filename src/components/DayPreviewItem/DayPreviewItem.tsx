@@ -22,6 +22,7 @@ import { orange } from "@material-ui/core/colors";
 function DayPreviewItem(props: {
   hourList: WeatherListItem[];
   weatherVars: WeatherInspectionVariables;
+  utcOffset: number;
   sunriseTime: number;
   sunsetTime: number;
   units: Units;
@@ -33,6 +34,7 @@ function DayPreviewItem(props: {
     weatherPreview: getWeatherInfo(
       props.hourList,
       props.weatherVars,
+      props.utcOffset,
       props.sunriseTime,
       props.sunsetTime
     ),
@@ -43,6 +45,7 @@ function DayPreviewItem(props: {
       weatherPreview: getWeatherInfo(
         props.hourList,
         props.weatherVars,
+        props.utcOffset,
         props.sunriseTime,
         props.sunsetTime
       ),

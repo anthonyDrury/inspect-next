@@ -87,6 +87,7 @@ function DatePage(props?: DatePageProps): JSX.Element {
       return getWeatherInfo(
         weatherList,
         props.state.settings.inspectionWeatherVars,
+        props?.state.fiveDay.forecast.city.timezone,
         props?.state.fiveDay.forecast.city.sunrise,
         props?.state.fiveDay.forecast.city.sunset
       );
@@ -95,11 +96,16 @@ function DatePage(props?: DatePageProps): JSX.Element {
   }
 
   return (
-    <>
+    <div
+      style={{
+        backgroundColor: yellow[500],
+      }}
+    >
       <Grid
         container
         style={{
-          backgroundColor: yellow[500],
+          maxWidth: " 50rem",
+          margin: "0 auto",
         }}
       >
         <Grid item xs={12} style={{ marginBottom: "0.5rem" }}>
@@ -198,8 +204,7 @@ function DatePage(props?: DatePageProps): JSX.Element {
                 <FontAwesomeIcon color="red" size="3x" icon={faTimesCircle} />
               )}
               <Typography component="p">
-                {!localState?.weatherPreview?.viableTypes.isOptimal &&
-                localState?.weatherPreview !== undefined
+                {!localState?.weatherPreview?.viableTypes.isOptimal
                   ? localState.weatherPreview!.viableTypes.reason
                   : null}
               </Typography>
@@ -246,7 +251,7 @@ function DatePage(props?: DatePageProps): JSX.Element {
           </>
         )}
       </Grid>
-    </>
+    </div>
   );
 }
 

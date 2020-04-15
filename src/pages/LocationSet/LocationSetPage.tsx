@@ -48,6 +48,7 @@ function LocationSetPage(props?: LocationSetProps): JSX.Element {
           <DayPreviewList
             weatherMap={props!.state!.fiveDay?.mappedForecast}
             weatherConditions={props!.state!.settings.inspectionWeatherVars}
+            utcOffset={props!.state!.fiveDay!.forecast.city.timezone}
             sunsetTime={props!.state!.fiveDay!.forecast.city.sunset}
             sunriseTime={props!.state!.fiveDay!.forecast.city.sunrise}
             units={props!.state!.settings.units}
