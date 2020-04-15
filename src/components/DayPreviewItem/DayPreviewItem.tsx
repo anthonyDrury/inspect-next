@@ -26,7 +26,7 @@ function DayPreviewItem(props: {
   sunsetTime: number;
   units: Units;
 }): JSX.Element {
-  const [state, setState]: [
+  const [localState, setLocalState]: [
     { weatherPreview: WeatherPreviewType; navigate?: string | undefined },
     any
   ] = useState({
@@ -39,7 +39,7 @@ function DayPreviewItem(props: {
   });
 
   useEffect((): void => {
-    setState({
+    setLocalState({
       weatherPreview: getWeatherInfo(
         props.hourList,
         props.weatherVars,
@@ -51,18 +51,17 @@ function DayPreviewItem(props: {
 
   return (
     <>
-      {state.navigate ? (
-        <Redirect to={state.navigate} />
+      {localState.navigate ? (
+        <Redirect to={localState.navigate} />
       ) : (
         <Grid
           container
           className="in-day-preview-item"
-          style={{ backgroundColor: orange[500] }}
           onClick={(): void => {
-            setState({
-              ...state.weatherPreview,
+            setLocalState({
+              ...localState.weatherPreview,
               navigate: `${moment(
-                state.weatherPreview?.defaultWeather.dt_txt
+                localState.weatherPreview?.defaultWeather.dt_txt
               ).format("YYYY-MM-DD")}`,
             });
           }}
@@ -78,10 +77,10 @@ function DayPreviewItem(props: {
               backgroundColor: orange[400],
             }}
             onClick={(): void => {
-              setState({
-                ...state.weatherPreview,
+              setLocalState({
+                ...localState.weatherPreview,
                 navigate: `${moment(
-                  state.weatherPreview?.defaultWeather.dt_txt
+                  localState.weatherPreview?.defaultWeather.dt_txt
                 ).format("YYYY-MM-DD")}`,
               });
             }}
@@ -95,11 +94,13 @@ function DayPreviewItem(props: {
             className="in-day-preview-item__image-container"
           >
             <Tooltip
-              title={state.weatherPreview.defaultWeather.weather[0].description}
+              title={
+                localState.weatherPreview.defaultWeather.weather[0].description
+              }
               arrow
             >
               <img
-                src={`/weatherIcons/${state.weatherPreview?.defaultWeather.weather[0]?.icon?.replace(
+                src={`/weatherIcons/${localState.weatherPreview?.defaultWeather.weather[0]?.icon?.replace(
                   "n",
                   "d"
                 )}@2x.png`}
@@ -109,21 +110,21 @@ function DayPreviewItem(props: {
             <div className="in-day-preview-item__is-viable">
               <Tooltip
                 title={`${
-                  state.weatherPreview?.viableTypes.isOptimal
+                  localState.weatherPreview?.viableTypes.isOptimal
                     ? "Optimal"
-                    : state.weatherPreview?.viableTypes.isViable
+                    : localState.weatherPreview?.viableTypes.isViable
                     ? "Viable, but not optimal,"
                     : "Inadvisable"
                 } inspection time`}
                 arrow
               >
                 <div>
-                  {state.weatherPreview?.viableTypes.isViable ||
-                  state.weatherPreview?.viableTypes.isOptimal ? (
+                  {localState.weatherPreview?.viableTypes.isViable ||
+                  localState.weatherPreview?.viableTypes.isOptimal ? (
                     <FontAwesomeIcon
                       size="3x"
                       color={
-                        state.weatherPreview?.viableTypes.isOptimal
+                        localState.weatherPreview?.viableTypes.isOptimal
                           ? "green"
                           : "black"
                       }
@@ -139,8 +140,8 @@ function DayPreviewItem(props: {
                 </div>
               </Tooltip>
               <Typography component="p">
-                {!state.weatherPreview.viableTypes.isOptimal
-                  ? state.weatherPreview?.viableTypes.reason
+                {!localState.weatherPreview.viableTypes.isOptimal
+                  ? localState.weatherPreview?.viableTypes.reason
                   : "Optimal"}
               </Typography>
             </div>
@@ -156,29 +157,29 @@ function DayPreviewItem(props: {
             sm={4}
           >
             <Tooltip
-              title={moment(state.weatherPreview?.defaultWeather.dt_txt).format(
-                "YYYY-MMM-DD"
-              )}
+              title={moment(
+                localState.weatherPreview?.defaultWeather.dt_txt
+              ).format("YYYY-MMM-DD")}
               arrow
             >
               <p className="in-text--extra-large in-day-preview-item__infoText">
-                {moment(state.weatherPreview?.defaultWeather.dt_txt).format(
-                  "dddd"
-                )}
+                {moment(
+                  localState.weatherPreview?.defaultWeather.dt_txt
+                ).format("dddd")}
               </p>
             </Tooltip>
             <p className="in-text--large in-day-preview-item__infoText">
-              {state.weatherPreview?.defaultWeather.weather[0].description}
+              {localState.weatherPreview?.defaultWeather.weather[0].description}
             </p>
             <p className="in-text--large in-day-preview-item__infoText">
-              {state.weatherPreview?.minTemp}° - {state.weatherPreview?.maxTemp}
-              °
+              {localState.weatherPreview?.minTemp}° -{" "}
+              {localState.weatherPreview?.maxTemp}°
             </p>
             <p className="in-day-preview-item__infoText">
-              rain: {`${state.weatherPreview?.rainAmount}mm`}
+              rain: {`${localState.weatherPreview?.rainAmount}mm`}
             </p>
             <p className="in-day-preview-item__infoText">
-              Snow: {`${state.weatherPreview?.snowAmount}mm`}
+              Snow: {`${localState.weatherPreview?.snowAmount}mm`}
             </p>
           </Grid>
 
@@ -193,9 +194,9 @@ function DayPreviewItem(props: {
           >
             {/* TO DO: convert metric to settings (metric/imperial) */}
 
-            {!state.weatherPreview?.isViable &&
-            (state.weatherPreview?.nineAM !== undefined ||
-              state.weatherPreview?.threePM !== undefined) ? (
+            {!localState.weatherPreview?.isViable &&
+            (localState.weatherPreview?.nineAM !== undefined ||
+              localState.weatherPreview?.threePM !== undefined) ? (
               <>
                 <div className="in-day-preview-item__preview-container">
                   <p>&nbsp;</p>
@@ -203,36 +204,38 @@ function DayPreviewItem(props: {
                   <p>wind:</p>
                   <p>humidity:</p>
                 </div>
-                <If condition={state.weatherPreview?.nineAM !== undefined}>
+                <If condition={localState.weatherPreview?.nineAM !== undefined}>
                   <div className="in-day-preview-item__preview-container">
                     <p>9AM</p>
-                    <p>{`${state.weatherPreview?.nineAM!.main.temp}° ${
+                    <p>{`${localState.weatherPreview?.nineAM!.main.temp}° ${
                       props.units === "Imperial" ? "F" : "C"
                     }`}</p>
-                    <p>{`${state.weatherPreview?.nineAM?.wind.speed} ${
+                    <p>{`${localState.weatherPreview?.nineAM?.wind.speed} ${
                       props.units === "Imperial" ? "MPH" : "M/S"
                     }`}</p>
-                    <p>{`${state.weatherPreview?.nineAM?.main.humidity}%`}</p>
+                    <p>{`${localState.weatherPreview?.nineAM?.main.humidity}%`}</p>
                   </div>
                 </If>
-                <If condition={state.weatherPreview?.threePM !== undefined}>
+                <If
+                  condition={localState.weatherPreview?.threePM !== undefined}
+                >
                   <div className="in-day-preview-item__preview-container">
                     <p>3PM</p>
-                    <p>{`${state.weatherPreview?.threePM!.main.temp}° ${
+                    <p>{`${localState.weatherPreview?.threePM!.main.temp}° ${
                       props.units === "Imperial" ? "F" : "C"
                     }`}</p>
-                    <p>{`${state.weatherPreview?.threePM?.wind.speed} ${
+                    <p>{`${localState.weatherPreview?.threePM?.wind.speed} ${
                       props.units === "Imperial" ? "MPH" : "M/S"
                     }`}</p>
-                    <p>{`${state.weatherPreview?.threePM?.main.humidity}%`}</p>
+                    <p>{`${localState.weatherPreview?.threePM?.main.humidity}%`}</p>
                   </div>
                 </If>
               </>
             ) : (
-              <If condition={state.weatherPreview?.isViable}>
+              <If condition={localState.weatherPreview?.isViable}>
                 {[
-                  ...state.weatherPreview?.viableTypes.optimalTimes,
-                  ...state.weatherPreview?.viableTypes.viableTimes,
+                  ...localState.weatherPreview?.viableTypes.optimalTimes,
+                  ...localState.weatherPreview?.viableTypes.viableTimes,
                 ].map(
                   (time: WeatherValidity, index: number): JSX.Element => {
                     return (

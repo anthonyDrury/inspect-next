@@ -16,10 +16,14 @@ type HourInfoProps = {
   units: Units | undefined;
 };
 function HourInfoTable(props?: HourInfoProps): JSX.Element {
-  function getHourGridItem(weatherItem: WeatherValidity): JSX.Element {
+  function getHourGridItem(
+    weatherItem: WeatherValidity,
+    index: number
+  ): JSX.Element {
     const hour: string = moment(weatherItem.weather.dt_txt).format("hh A");
     return (
       <Grid
+        key={index}
         item
         container
         direction="row"
@@ -79,7 +83,15 @@ function HourInfoTable(props?: HourInfoProps): JSX.Element {
   }
 
   return (
-    <Grid container direction="column" style={{ backgroundColor: orange[500] }}>
+    <Grid
+      container
+      direction="column"
+      style={{
+        backgroundColor: orange[500],
+        maxWidth: "50rem",
+        margin: "0 auto",
+      }}
+    >
       <Grid
         item
         container

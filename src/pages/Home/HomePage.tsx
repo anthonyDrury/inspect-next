@@ -63,7 +63,10 @@ function HomePage(): JSX.Element {
       </Container>
       <Divider style={{ backgroundColor: "black" }}></Divider>
       <WavyBorder></WavyBorder>
-      <Container maxWidth={false} style={{ backgroundColor: yellow[500] }}>
+      <Container
+        maxWidth={false}
+        style={{ backgroundColor: yellow[500], paddingBottom: "0.5rem" }}
+      >
         <Typography variant="h4" component="h3">
           Easily determine which days will have the best conditions.
         </Typography>
