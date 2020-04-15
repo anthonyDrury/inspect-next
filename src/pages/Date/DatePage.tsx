@@ -96,7 +96,12 @@ function DatePage(props?: DatePageProps): JSX.Element {
 
   return (
     <>
-      <Grid container style={{ backgroundColor: yellow[500] }}>
+      <Grid
+        container
+        style={{
+          backgroundColor: yellow[500],
+        }}
+      >
         <Grid item xs={12} style={{ marginBottom: "0.5rem" }}>
           <Button
             variant="contained"
@@ -134,6 +139,7 @@ function DatePage(props?: DatePageProps): JSX.Element {
             <Grid
               container
               alignContent="center"
+              alignItems="center"
               justify="flex-start"
               direction="column"
               item
@@ -161,6 +167,7 @@ function DatePage(props?: DatePageProps): JSX.Element {
               item
               container
               alignContent="center"
+              alignItems="center"
               justify="space-between"
               direction="column"
               xs={6}
@@ -202,6 +209,7 @@ function DatePage(props?: DatePageProps): JSX.Element {
               item
               container
               alignContent="center"
+              alignItems="center"
               justify="center"
               direction="column"
               xs={12}

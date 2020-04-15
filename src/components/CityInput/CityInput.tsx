@@ -34,7 +34,7 @@ type CityProps = {
 };
 
 function CityInput(props?: CityProps & ComponentProps<any>): JSX.Element {
-  const [state, setState]: [
+  const [localState, setLocalState]: [
     CityInputState,
     Dispatch<SetStateAction<CityInputState>>
   ] = useState({
@@ -46,16 +46,16 @@ function CityInput(props?: CityProps & ComponentProps<any>): JSX.Element {
   });
 
   async function getInputOnChange(input: string): Promise<void> {
-    setState({
-      ...state,
+    setLocalState({
+      ...localState,
       loading: true,
     });
     const options: AutocompleteOption[] = await getAutocomplete(
       input,
-      state.uuid
+      localState.uuid
     );
-    setState({
-      ...state,
+    setLocalState({
+      ...localState,
       options,
       loading: false,
     });
@@ -72,8 +72,8 @@ function CityInput(props?: CityProps & ComponentProps<any>): JSX.Element {
           })
         );
       }
-      setState({
-        ...state,
+      setLocalState({
+        ...localState,
         inputDisplayed: false,
         route: `/${cityStringArr[0]}/${cityStringArr[1]}/`,
       });
@@ -86,26 +86,27 @@ function CityInput(props?: CityProps & ComponentProps<any>): JSX.Element {
         <div
           style={{ cursor: "pointer", alignItems: "center", display: "flex" }}
           onClick={(): void => {
-            setState({
-              ...state,
-              inputDisplayed: !state.inputDisplayed,
-              inputFocus: !state.inputDisplayed,
+            setLocalState({
+              ...localState,
+              inputDisplayed: !localState.inputDisplayed,
+              inputFocus: !localState.inputDisplayed,
             });
           }}
         >
-          {!state.inputDisplayed ? "Find a city" : null} &nbsp;
+          {!localState.inputDisplayed ? "Find a city" : null} &nbsp;
           <FontAwesomeIcon icon={faSearch} />
         </div>
       </If>
 
-      {state.route ? <Redirect to={state.route} /> : null}
+      {localState.route ? <Redirect to={localState.route} /> : null}
       <Autocomplete
         color="primary"
-        hidden={!state.inputDisplayed}
+        hidden={!localState.inputDisplayed}
         className="in-city-input"
         id="city-input"
-        options={state.options}
-        loading={state.loading}
+        options={localState.options}
+        noOptionsText="start typing for options"
+        loading={localState.loading}
         getOptionLabel={(option: AutocompleteOption): string =>
           option.description
         }
@@ -123,9 +124,9 @@ function CityInput(props?: CityProps & ComponentProps<any>): JSX.Element {
             {...params}
             label="Find a city"
             inputRef={(input: any | null): void | null => {
-              if (isDefined(input) && state.inputFocus) {
+              if (isDefined(input) && localState.inputFocus) {
                 input.focus();
-                setState({ ...state, inputFocus: false });
+                setLocalState({ ...localState, inputFocus: false });
               }
             }}
             color="secondary"

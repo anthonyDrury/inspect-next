@@ -1,5 +1,5 @@
 import moment, { Moment } from "moment";
-import { Location, CountryID } from "../types/location.type";
+import { Location } from "../types/location.type";
 import { WeatherListItem } from "../types/openWeather.types";
 import {
   WeatherPreviewType,
@@ -9,7 +9,6 @@ import {
   WeatherReason,
   WeatherValidity,
 } from "../types/weather.type";
-import { countries } from "./constant";
 import { Settings } from "../types/app.type";
 import { State } from "../types/redux.types";
 import { doLocationMatch } from "./routes";
@@ -351,13 +350,6 @@ export function getMainReasonForDay(
     return viable ? "A bit wet" : "Too wet";
   }
   return "Optimal";
-}
-
-export function getCountryCode(countryName: string): string | undefined {
-  return countries.find(
-    (country: CountryID): boolean =>
-      country.label.toLowerCase() === countryName.toLowerCase()
-  )?.code;
 }
 
 export function kelvinToCelcius(temp: number): number {
