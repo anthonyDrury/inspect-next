@@ -8,6 +8,7 @@ import { Units } from "../../types/app.type";
 type DayPreviewListProps = {
   weatherMap: Map<string, Map<string, WeatherListItem>>;
   weatherConditions: WeatherInspectionVariables;
+  utcOffset: number;
   sunriseTime: number;
   sunsetTime: number;
   units: Units;
@@ -27,6 +28,7 @@ function DayPreviewList(props: DayPreviewListProps): JSX.Element {
                 hourList={Array.from(hour.values())}
                 weatherVars={props.weatherConditions}
                 key={index}
+                utcOffset={props.utcOffset}
                 sunriseTime={props.sunriseTime}
                 sunsetTime={props.sunsetTime}
                 units={props.units}

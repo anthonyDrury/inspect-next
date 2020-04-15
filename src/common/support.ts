@@ -75,6 +75,7 @@ export function locationSetForDifferent(
 export function getWeatherInfo(
   weatherList: WeatherListItem[],
   weatherVars: WeatherInspectionVariables,
+  utcOffset: number,
   sunriseTime: number,
   sunsetTime: number
 ): WeatherPreviewType {
@@ -116,6 +117,7 @@ export function getWeatherInfo(
   const viableTypes: ViableWeather = getViableWeatherSlots(
     weatherList,
     weatherVars,
+    utcOffset,
     sunriseTime,
     sunsetTime
   );
@@ -138,11 +140,20 @@ export function getWeatherInfo(
 export function isWeatherViable(
   weatherItem: WeatherListItem,
   weatherVars: WeatherInspectionVariables,
+  utcOffset: number,
   sunriseTime: number,
   sunsetTime: number
 ): WeatherReasonObj {
-  const sunrise: number = moment(sunriseTime * 1000).hours();
-  const sunset: number = moment(sunsetTime * 1000).hours();
+  const sunrise: number = moment
+    .unix(sunriseTime)
+    .utc()
+    .utcOffset(utcOffset / 60)
+    .hours();
+  const sunset: number = moment
+    .unix(sunsetTime)
+    .utc()
+    .utcOffset(utcOffset / 60)
+    .hours();
   const isDaylight: boolean =
     moment(weatherItem.dt_txt).hours() >= sunrise &&
     moment(weatherItem.dt_txt).hours() < sunset;
@@ -153,7 +164,6 @@ export function isWeatherViable(
   const isTooCold: boolean = weatherItem.main.temp_min < weatherVars.viaTempMin;
   const isWindViable: boolean =
     weatherItem.wind.speed <= weatherVars.viaWindMax;
-
   return {
     isDaylight,
     isTooWet: !isRainViable,
@@ -166,11 +176,20 @@ export function isWeatherViable(
 export function isWeatherOptimal(
   weatherItem: WeatherListItem,
   weatherVars: WeatherInspectionVariables,
+  utcOffset: number,
   sunriseTime: number,
   sunsetTime: number
 ): WeatherReasonObj {
-  const sunrise: number = moment(sunriseTime * 1000).hours();
-  const sunset: number = moment(sunsetTime * 1000).hours();
+  const sunrise: number = moment
+    .unix(sunriseTime)
+    .utc()
+    .utcOffset(utcOffset / 60)
+    .hours();
+  const sunset: number = moment
+    .unix(sunsetTime)
+    .utc()
+    .utcOffset(utcOffset / 60)
+    .hours();
   const isDaylight: boolean =
     moment(weatherItem.dt_txt).hours() >= sunrise &&
     moment(weatherItem.dt_txt).hours() < sunset;
@@ -227,6 +246,7 @@ export function getReason(
 export function getViableWeatherSlots(
   weatherList: WeatherListItem[],
   weatherVars: WeatherInspectionVariables,
+  utcOffset: number,
   sunriseTime: number,
   sunsetTime: number
 ): ViableWeather {
@@ -241,11 +261,17 @@ export function getViableWeatherSlots(
 
   weatherList.forEach((listItem: WeatherListItem, index: number): void => {
     isViableObjArr.push(
-      isWeatherViable(listItem, weatherVars, sunriseTime, sunsetTime)
+      isWeatherViable(listItem, weatherVars, utcOffset, sunriseTime, sunsetTime)
     );
 
     isOptimalObjArr.push(
-      isWeatherOptimal(listItem, weatherVars, sunriseTime, sunsetTime)
+      isWeatherOptimal(
+        listItem,
+        weatherVars,
+        utcOffset,
+        sunriseTime,
+        sunsetTime
+      )
     );
     if (getIsWeatherValid(isOptimalObjArr[index])) {
       optimalTimes.push({
@@ -253,7 +279,13 @@ export function getViableWeatherSlots(
         isOptimal: true,
         isViable: true,
         reason: getReason(
-          isWeatherOptimal(listItem, weatherVars, sunriseTime, sunsetTime),
+          isWeatherOptimal(
+            listItem,
+            weatherVars,
+            utcOffset,
+            sunriseTime,
+            sunsetTime
+          ),
           true
         ),
       });
@@ -262,7 +294,13 @@ export function getViableWeatherSlots(
         isOptimal: true,
         isViable: true,
         reason: getReason(
-          isWeatherOptimal(listItem, weatherVars, sunriseTime, sunsetTime),
+          isWeatherOptimal(
+            listItem,
+            weatherVars,
+            utcOffset,
+            sunriseTime,
+            sunsetTime
+          ),
           true
         ),
       });
@@ -273,7 +311,13 @@ export function getViableWeatherSlots(
         isOptimal: false,
         isViable: true,
         reason: getReason(
-          isWeatherOptimal(listItem, weatherVars, sunriseTime, sunsetTime),
+          isWeatherOptimal(
+            listItem,
+            weatherVars,
+            utcOffset,
+            sunriseTime,
+            sunsetTime
+          ),
           true
         ),
       });
@@ -282,7 +326,13 @@ export function getViableWeatherSlots(
         isOptimal: false,
         isViable: true,
         reason: getReason(
-          isWeatherOptimal(listItem, weatherVars, sunriseTime, sunsetTime),
+          isWeatherOptimal(
+            listItem,
+            weatherVars,
+            utcOffset,
+            sunriseTime,
+            sunsetTime
+          ),
           true
         ),
       });
@@ -293,7 +343,13 @@ export function getViableWeatherSlots(
         isOptimal: false,
         isViable: false,
         reason: getReason(
-          isWeatherOptimal(listItem, weatherVars, sunriseTime, sunsetTime),
+          isWeatherOptimal(
+            listItem,
+            weatherVars,
+            utcOffset,
+            sunriseTime,
+            sunsetTime
+          ),
           false
         ),
       });

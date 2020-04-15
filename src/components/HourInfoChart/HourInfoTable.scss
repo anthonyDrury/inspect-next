@@ -1,14 +1,19 @@
 .in-hour-table {
+  margin: 0 auto;
+  margin-bottom: 1rem;
+  background-color: #fb8c00;
+  max-width: 50rem;
+
   &__row {
     border: 1px solid black;
-
-    &:nth-child(even) {
-      background-color: rgba(0, 0, 0, 0.1);
-    }
 
     & + .in-hour-table__row {
       padding: 0.5rem 0;
       border-top: none;
+    }
+
+    &:nth-child(even) {
+      background-color: rgba(0, 0, 0, 0.1);
     }
   }
 }
