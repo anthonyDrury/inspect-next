@@ -3,7 +3,7 @@ import { State, Action } from "../../types/redux.types";
 import { withRouter, RouteComponentProps, Redirect } from "react-router-dom";
 import { Location } from "../../types/location.type";
 import { connect } from "react-redux";
-import { getWeatherInfo, isStateValid } from "../../common/support";
+import { isStateValid } from "../../common/support";
 import { mapFromUrlSafeLocation, safeUrlString } from "../../common/routes";
 import { getFiveDay } from "../../clients/server.client";
 import { updateLocation } from "../../redux/actions/location.actions";
@@ -18,6 +18,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import HourInfoTable from "../../components/HourInfoChart/HourInfoTable";
 import yellow from "@material-ui/core/colors/yellow";
+import { getWeatherInfo } from "../../common/weather.support";
 
 interface DatePageProps
   extends RouteComponentProps<Location & { date: string }> {

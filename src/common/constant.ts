@@ -2,7 +2,7 @@ import { State } from "../types/redux.types";
 import { WeatherInspectionVariables } from "../types/weather.type";
 import { Settings } from "../types/app.type";
 
-export const baseWeatherConditions: WeatherInspectionVariables = {
+const baseWeatherConditions: WeatherInspectionVariables = {
   // Temp conditions, in Kelvin
   optTempMax: 98.6,
   viaTempMax: 104,

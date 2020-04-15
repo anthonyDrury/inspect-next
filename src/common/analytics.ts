@@ -4,7 +4,7 @@ import { isDefined } from "./support";
 // Google analytics functions
 // Needs to test for window as can be run without browser (test env)
 
-export function isNotTestEnv(): boolean {
+function isNotTestEnv(): boolean {
   return (
     isDefined(process.env.REACT_APP_ANALYTICS_KEY) &&
     process.env.NODE_ENV !== "test" &&
