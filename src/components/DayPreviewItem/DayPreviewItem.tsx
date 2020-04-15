@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import "./DayPreviewItem.scss";
 import { WeatherListItem } from "../../types/openWeather.types";
 import moment from "moment";
-import { getWeatherInfo } from "../../common/support";
 import {
   WeatherPreviewType,
   WeatherInspectionVariables,
@@ -18,6 +17,7 @@ import { Grid, Button, Typography, Tooltip } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
 import { Units } from "../../types/app.type";
 import { orange } from "@material-ui/core/colors";
+import { getWeatherInfo } from "../../common/weather.support";
 
 function DayPreviewItem(props: {
   hourList: WeatherListItem[];
