@@ -18,6 +18,7 @@ import {
 } from "@material-ui/core";
 import HomePage from "./pages/Home/HomePage";
 import { yellow, orange } from "@material-ui/core/colors";
+import Footer from "./components/Footer/Footer";
 
 type AppProps = {
   updateFiveDayForecast?: () => Dispatch<Action>;
@@ -41,7 +42,7 @@ function App(props?: AppProps): JSX.Element {
       <Router history={history}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <NavHeader></NavHeader>
+          <NavHeader />
           <Switch>
             <Route exact path={Routes.HOME}>
               <HomePage></HomePage>
@@ -56,6 +57,7 @@ function App(props?: AppProps): JSX.Element {
               <LocationNotFoundPage></LocationNotFoundPage>
             </Route>
           </Switch>
+          <Footer />
         </ThemeProvider>
       </Router>
     </div>
