@@ -1,5 +1,5 @@
 import { FiveDayForecast } from "../types/openWeather.types";
-import { getCountryCode, isStateValid } from "../common/support";
+import { isStateValid } from "../common/support";
 import store from "../redux/store/store";
 import { updateFiveDayForecast } from "../redux/actions/weather.actions";
 import { updateLoading } from "../redux/actions/loading.actions";
@@ -17,10 +17,10 @@ export async function getFiveDay(location: Location): Promise<void> {
   const state: State = store.getState();
   if (!isStateValid("fiveDay", state) && !state.loading) {
     store.dispatch(updateLoading(true));
-    const coutryCode: string | undefined = getCountryCode(location.countryName);
+
     const response: Response = await fetch(
-      `${API_URL}/fiveDay?cityName=${location.cityName}${
-        coutryCode !== undefined ? `,${coutryCode}` : ""
+      `${API_URL}/fiveDay?cityName=${location.cityName}&countryName=${
+        location.countryName
       }&units=${state.settings.units.toLowerCase()}`
     );
     const body: Promise<FiveDayForecast> = response.json();

@@ -2,9 +2,11 @@
   border: solid 1px black;
   margin-bottom: 0.5rem;
   position: relative;
+  cursor: pointer;
+  background-color: #ff9800;
 
   &:hover {
-    background-color: lightgrey;
+    background-color: #fb8c00;
   }
 
   // sub-components
