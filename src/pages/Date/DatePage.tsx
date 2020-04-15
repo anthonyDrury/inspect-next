@@ -204,7 +204,8 @@ function DatePage(props?: DatePageProps): JSX.Element {
                 <FontAwesomeIcon color="red" size="3x" icon={faTimesCircle} />
               )}
               <Typography component="p">
-                {!localState?.weatherPreview?.viableTypes.isOptimal
+                {localState.weatherPreview?.viableTypes !== undefined &&
+                !localState?.weatherPreview?.viableTypes.isOptimal
                   ? localState.weatherPreview!.viableTypes.reason
                   : null}
               </Typography>
