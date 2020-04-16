@@ -19,6 +19,17 @@ function stringFromSafeUrl(s: string): string {
   return s.replace("-", " ");
 }
 
+export function updatePageDescription(
+  title: string,
+  description: string
+): void {
+  document.title = title;
+
+  document
+    .querySelector('meta[name="description"]')
+    ?.setAttribute("content", description);
+}
+
 export function getCityRoute(cityOption: AutocompleteOption): string[] {
   return [
     safeUrlString(cityOption.terms[0].value),

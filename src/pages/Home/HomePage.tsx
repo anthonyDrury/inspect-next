@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CityInput from "../../components/CityInput/CityInput";
 import {
   Typography,
@@ -18,9 +18,17 @@ import orange from "@material-ui/core/colors/orange";
 import yellow from "@material-ui/core/colors/yellow";
 import WavyBorder from "../../components/WavyBorder/WavyBorder";
 import SettingsModal from "../../components/SettingsModal/SettingsModal";
+import { updatePageDescription } from "../../common/routes";
 
 // displays the five day forecast
 function HomePage(): JSX.Element {
+  useEffect((): void => {
+    updatePageDescription(
+      `Inspect Next`,
+      `View optimal beehive inspection times`
+    );
+  });
+
   return (
     <div className="in-home">
       <Container

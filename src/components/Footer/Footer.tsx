@@ -8,7 +8,14 @@ export default function Footer(): JSX.Element {
   return (
     <div className="in-footer">
       <Grid container justify="space-around">
-        <Grid container direction="column" justify="flex-start" xs={12} sm={3}>
+        <Grid
+          item
+          container
+          direction="column"
+          justify="flex-start"
+          xs={12}
+          sm={3}
+        >
           <Grid item>
             <Typography variant="h6" component="h6" noWrap>
               Navigation
@@ -22,7 +29,14 @@ export default function Footer(): JSX.Element {
             </Typography>
           </Grid>
         </Grid>
-        <Grid container direction="column" justify="flex-start" xs={12} sm={3}>
+        <Grid
+          item
+          container
+          direction="column"
+          justify="flex-start"
+          xs={12}
+          sm={3}
+        >
           <Grid item>
             <Typography variant="h6" component="h6" noWrap>
               Contact
