@@ -28,6 +28,9 @@ function App(props?: AppProps): JSX.Element {
   useEffect((): void => {
     initGA();
     PageView();
+    history.listen((): void => {
+      PageView();
+    });
   });
   const theme: Theme = createMuiTheme({
     palette: {
