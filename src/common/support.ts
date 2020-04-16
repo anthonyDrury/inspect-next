@@ -22,7 +22,10 @@ export function isFiveDayValid(state: State, newLocation?: Location): boolean {
       : doLocationMatch(state.location, state.fiveDay?.locationFor);
 
   const isUnitValid: boolean = state.settings.units === state.fiveDay?.unitsFor;
-  return isNotExpired && isLocationValid && isUnitValid;
+
+  const isForecastPresent: boolean = state.fiveDay?.forecast.list !== undefined;
+
+  return isNotExpired && isLocationValid && isUnitValid && isForecastPresent;
 }
 
 export function isStateValid(param: keyof State, state: State): boolean {

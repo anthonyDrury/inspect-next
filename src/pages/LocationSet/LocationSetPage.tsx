@@ -6,7 +6,10 @@ import { updateLocation } from "../../redux/actions/location.actions";
 import { Location } from "../../types/location.type";
 import { getFiveDay } from "../../clients/server.client";
 import { RouteComponentProps, withRouter } from "react-router-dom";
-import { mapFromUrlSafeLocation } from "../../common/routes";
+import {
+  mapFromUrlSafeLocation,
+  updatePageDescription,
+} from "../../common/routes";
 import { isFiveDayValid } from "../../common/support";
 import { Typography, Container } from "@material-ui/core";
 import { yellow } from "@material-ui/core/colors";
@@ -18,6 +21,10 @@ interface LocationSetProps extends RouteComponentProps<Location> {
 // displays the five day forecast
 function LocationSetPage(props?: LocationSetProps): JSX.Element {
   useEffect((): void => {
+    updatePageDescription(
+      `${props?.match.params.cityName}, ${props?.match.params.countryName} forecast`,
+      `Five day forecast for ${props?.match.params.cityName}, ${props?.match.params.countryName}`
+    );
     if (
       props?.state !== undefined &&
       !isFiveDayValid(props?.state, props?.match.params)

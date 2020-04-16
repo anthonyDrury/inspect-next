@@ -4,7 +4,11 @@ import { withRouter, RouteComponentProps, Redirect } from "react-router-dom";
 import { Location } from "../../types/location.type";
 import { connect } from "react-redux";
 import { isStateValid } from "../../common/support";
-import { mapFromUrlSafeLocation, safeUrlString } from "../../common/routes";
+import {
+  mapFromUrlSafeLocation,
+  safeUrlString,
+  updatePageDescription,
+} from "../../common/routes";
 import { getFiveDay } from "../../clients/server.client";
 import { updateLocation } from "../../redux/actions/location.actions";
 import moment from "moment";
@@ -45,6 +49,18 @@ function DatePage(props?: DatePageProps): JSX.Element {
   }
 
   useEffect((): void => {
+    updatePageDescription(
+      `${props?.state?.location?.cityName}, ${
+        props?.state?.location?.countryName
+      } ${moment(localState.weatherPreview?.defaultWeather.dt_txt).format(
+        "dddd MMMM-DD"
+      )} forecast`,
+      `${props?.state?.location?.cityName}, ${
+        props?.state?.location?.countryName
+      } detailed forecast overview for ${moment(
+        localState.weatherPreview?.defaultWeather.dt_txt
+      ).format("dddd MMMM-DD")}`
+    );
     setLocalState(computeLocalState());
     if (props?.state !== undefined && !isStateValid("fiveDay", props.state)) {
       const safeParams: Location | undefined = mapFromUrlSafeLocation(

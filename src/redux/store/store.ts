@@ -27,6 +27,7 @@ function getStartState(): State {
         state.fiveDay?.forecast.list
       );
     }
+    state.loading = false;
     return state;
   }
 
