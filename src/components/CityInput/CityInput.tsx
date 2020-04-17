@@ -63,19 +63,16 @@ function CityInput(props?: CityProps & ComponentProps<any>): JSX.Element {
 
   function submitOnSelect(value: AutocompleteOption | null): void {
     if (isDefined(value)) {
-      const cityStringArr: string[] = getCityRoute(value as AutocompleteOption);
+      const location: Location = getCityRoute(value as AutocompleteOption);
       if (props?.updateLocation !== undefined) {
-        props.updateLocation(
-          mapFromUrlSafeLocation({
-            cityName: cityStringArr[0],
-            countryName: cityStringArr[1],
-          })
-        );
+        props.updateLocation(mapFromUrlSafeLocation(location));
       }
       setLocalState({
         ...localState,
         inputDisplayed: false,
-        route: `/${cityStringArr[0]}/${cityStringArr[1]}/`,
+        route: `/${location.cityName}${
+          location.stateName !== undefined ? `,${location.stateName}` : ""
+        }/${location.countryName}/`,
       });
     }
   }

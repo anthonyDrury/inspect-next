@@ -3,6 +3,7 @@ import { Term } from "./google.type";
 export type Location = {
   cityName: string;
   countryName: string;
+  stateName?: string | undefined;
 };
 
 export type CountryID = {
