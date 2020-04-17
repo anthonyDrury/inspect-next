@@ -70,9 +70,7 @@ function CityInput(props?: CityProps & ComponentProps<any>): JSX.Element {
       setLocalState({
         ...localState,
         inputDisplayed: false,
-        route: `/${location.cityName}${
-          location.stateName !== undefined ? `,${location.stateName}` : ""
-        }/${location.countryName}/`,
+        route: `/${location.cityName}/${location.countryName}/`,
       });
     }
   }

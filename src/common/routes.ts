@@ -31,17 +31,16 @@ export function updatePageDescription(
 }
 
 export function getCityRoute(cityOption: AutocompleteOption): Location {
-  const city: string = safeUrlString(cityOption.terms[0].value);
   const country: string = safeUrlString(
     cityOption.terms[cityOption.terms.length - 1].value
   );
-  const stateUSA: string | undefined =
-    country === "USA" ? safeUrlString(cityOption.terms[1].value) : undefined;
+  const city: string = `${safeUrlString(cityOption.terms[0].value)}${
+    country === "USA" ? `,${safeUrlString(cityOption.terms[1].value)}` : ""
+  }`;
 
   return {
     cityName: city,
     countryName: country,
-    stateName: stateUSA,
   };
 }
 
