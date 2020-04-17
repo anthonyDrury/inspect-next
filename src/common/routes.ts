@@ -30,11 +30,18 @@ export function updatePageDescription(
     ?.setAttribute("content", description);
 }
 
-export function getCityRoute(cityOption: AutocompleteOption): string[] {
-  return [
-    safeUrlString(cityOption.terms[0].value),
-    safeUrlString(cityOption.terms[cityOption.terms.length - 1].value),
-  ];
+export function getCityRoute(cityOption: AutocompleteOption): Location {
+  const country: string = safeUrlString(
+    cityOption.terms[cityOption.terms.length - 1].value
+  );
+  const city: string = `${safeUrlString(cityOption.terms[0].value)}${
+    country === "USA" ? `,${safeUrlString(cityOption.terms[1].value)}` : ""
+  }`;
+
+  return {
+    cityName: city,
+    countryName: country,
+  };
 }
 
 export function mapFromUrlSafeLocation<T extends Location | undefined>(
