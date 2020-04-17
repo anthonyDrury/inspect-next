@@ -156,7 +156,7 @@ function DatePage(props?: DatePageProps): JSX.Element {
           </Typography>
         </Grid>
         {localState.navigate ? (
-          <Redirect exact={false} to={localState.navigate} />
+          <Redirect push exact={false} to={localState.navigate} />
         ) : (
           <>
             <Grid
