@@ -93,7 +93,7 @@ function CityInput(props?: CityProps & ComponentProps<any>): JSX.Element {
         </div>
       </If>
 
-      {localState.route ? <Redirect to={localState.route} /> : null}
+      {localState.route ? <Redirect push to={localState.route} /> : null}
       <Autocomplete
         color="primary"
         hidden={!localState.inputDisplayed}

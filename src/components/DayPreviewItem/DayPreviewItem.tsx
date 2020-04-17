@@ -55,7 +55,7 @@ function DayPreviewItem(props: {
   return (
     <>
       {localState.navigate ? (
-        <Redirect to={localState.navigate} />
+        <Redirect push to={localState.navigate} />
       ) : (
         <Grid
           container
