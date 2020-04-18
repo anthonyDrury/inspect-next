@@ -1,6 +1,6 @@
 import moment, { Moment } from "moment";
 import { Location } from "../types/location.type";
-import { Settings } from "../types/app.type";
+import { Settings, Units } from "../types/app.type";
 import { State } from "../types/redux.types";
 import { doLocationMatch } from "./routes";
 
@@ -80,6 +80,25 @@ function metreSecToMilesHour(wind: number): number {
 
 function milesHourToMetreSec(wind: number): number {
   return Number((wind / 2.237).toFixed(2));
+}
+
+function millimetesrToInches(rainMM: number): number {
+  return Number((rainMM / 25.4).toFixed(2));
+}
+
+export function inchesToMillimeters(rainInch: number): number {
+  return Number((rainInch * 25.4).toFixed(2));
+}
+
+export function getRainAmount(
+  rainMM: number | undefined,
+  units: Units
+): number {
+  return rainMM !== undefined
+    ? units === "Metric"
+      ? rainMM
+      : millimetesrToInches(rainMM)
+    : 0;
 }
 
 export function mapSettingsToUnit(settings: Settings): Settings {
