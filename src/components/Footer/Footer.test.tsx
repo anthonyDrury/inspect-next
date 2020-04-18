@@ -6,7 +6,7 @@ import { Provider } from "react-redux";
 import store from "../../redux/store/store";
 import { Router } from "react-router-dom";
 
-test("renders test", (): void => {
+test("renders Home Link", (): void => {
   const history: History = createBrowserHistory();
   const { getByText } = render(
     <Provider store={store}>
@@ -15,6 +15,6 @@ test("renders test", (): void => {
       </Router>
     </Provider>
   );
-  const testElement = getByText(/Home/i);
-  expect(testElement).toBeInTheDocument();
+  const homeLink = getByText(/Home/i);
+  expect(homeLink).toBeInTheDocument();
 });
