@@ -80,6 +80,7 @@ function CityInput(props?: CityProps & ComponentProps<any>): JSX.Element {
       <If condition={!props.open}>
         <div
           style={{ cursor: "pointer", alignItems: "center", display: "flex" }}
+          data-testid="search-icon"
           onClick={(): void => {
             setLocalState({
               ...localState,
@@ -98,7 +99,8 @@ function CityInput(props?: CityProps & ComponentProps<any>): JSX.Element {
         color="primary"
         hidden={!localState.inputDisplayed}
         className="in-city-input"
-        id="city-input"
+        data-testid="search-input"
+        id="city-input-autocomplete"
         options={localState.options}
         noOptionsText="start typing for options"
         loading={localState.loading}

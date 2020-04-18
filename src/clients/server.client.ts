@@ -36,7 +36,7 @@ export async function getFiveDay(location: Location): Promise<void> {
 
     const body: Promise<FiveDayForecast> = response
       .json()
-      .catch((): void => routeToNotFound());
+      .catch(() => routeToNotFound());
 
     await body.then((data: FiveDayForecast): void => {
       if (data.list === undefined || data.list.length === 0) {

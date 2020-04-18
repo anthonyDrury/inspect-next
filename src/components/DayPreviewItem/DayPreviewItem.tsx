@@ -126,6 +126,11 @@ function DayPreviewItem(props: {
                   localState.weatherPreview?.viableTypes.isOptimal ? (
                     <FontAwesomeIcon
                       size="3x"
+                      data-testid={
+                        localState.weatherPreview?.viableTypes.isOptimal
+                          ? "optimal-icon"
+                          : "viable-icon"
+                      }
                       color={
                         localState.weatherPreview?.viableTypes.isOptimal
                           ? "green"
@@ -135,6 +140,7 @@ function DayPreviewItem(props: {
                     />
                   ) : (
                     <FontAwesomeIcon
+                      data-testid="inadvisable-icon"
                       color="red"
                       size="3x"
                       icon={faTimesCircle}
