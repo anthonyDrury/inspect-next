@@ -18,6 +18,7 @@ import { Redirect } from "react-router-dom";
 import { Units } from "../../types/app.type";
 import { orange } from "@material-ui/core/colors";
 import { getWeatherInfo } from "../../common/weather.support";
+import { getRainAmount } from "../../common/support";
 
 function DayPreviewItem(props: {
   hourList: WeatherListItem[];
@@ -185,10 +186,18 @@ function DayPreviewItem(props: {
               {localState.weatherPreview?.maxTemp}°
             </p>
             <p className="in-day-preview-item__infoText">
-              rain: {`${localState.weatherPreview?.rainAmount}mm`}
+              rain:{" "}
+              {`${getRainAmount(
+                localState.weatherPreview?.rainAmount,
+                props.units
+              )}${props.units === "Imperial" ? "in" : "mm"}`}
             </p>
             <p className="in-day-preview-item__infoText">
-              Snow: {`${localState.weatherPreview?.snowAmount}mm`}
+              snow:{" "}
+              {`${getRainAmount(
+                localState.weatherPreview?.snowAmount,
+                props.units
+              )}${props.units === "Imperial" ? "in" : "mm"}`}
             </p>
           </Grid>
 

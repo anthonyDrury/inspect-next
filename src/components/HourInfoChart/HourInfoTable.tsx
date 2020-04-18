@@ -9,6 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "./HourInfoTable.scss";
 import { WeatherValidity, ViableWeather } from "../../types/weather.type";
+import { getRainAmount } from "../../common/support";
 
 type HourInfoProps = {
   weatherPreview: ViableWeather | undefined;
@@ -63,9 +64,9 @@ function HourInfoTable(props?: HourInfoProps): JSX.Element {
         </Grid>
         <Grid item xs={2} className="in-hour-table__row-item">
           {weatherItem.weather.rain !== undefined
-            ? weatherItem.weather.rain["3h"]
+            ? getRainAmount(weatherItem.weather.rain["3h"], props?.units!)
             : 0}{" "}
-          mm
+          {props?.units === "Imperial" ? "in" : "mm"}
         </Grid>
         <Grid item xs={3} className="in-hour-table__row-item">
           {weatherItem.weather.wind.speed}{" "}
@@ -73,9 +74,9 @@ function HourInfoTable(props?: HourInfoProps): JSX.Element {
         </Grid>
         <Grid item xs={2} className="in-hour-table__row-item">
           {weatherItem.weather.snow !== undefined
-            ? weatherItem.weather.snow["3h"]
+            ? getRainAmount(weatherItem.weather.snow["3h"], props?.units!)
             : 0}{" "}
-          mm
+          {props?.units === "Imperial" ? "in" : "mm"}
         </Grid>
       </Grid>
     );
