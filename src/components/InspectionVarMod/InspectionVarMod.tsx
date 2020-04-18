@@ -12,6 +12,7 @@ import { Settings } from "../../types/app.type";
 import { updateSettings } from "../../redux/actions/settings.actions";
 import { WeatherInspectionVariables } from "../../types/weather.type";
 import If from "../If/If";
+import { getRainAmount, inchesToMillimeters } from "../../common/support";
 
 type InspectionVarModState = {
   page: "Optimal" | "Viable";
@@ -66,7 +67,9 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
           Viable
         </Button>
       </ButtonGroup>
-      <If condition={localState.page === "Optimal"}>
+      <If
+        condition={localState.page === "Optimal" && props?.state !== undefined}
+      >
         <h3>Optimal conditions:</h3>
         <p>
           Best conditions to hold an inspection, use these days if possible.
@@ -123,7 +126,10 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
               id="optimal-rain-max"
               label="Maximum optimal rain"
               style={{ maxWidth: "15rem" }}
-              value={props?.state?.settings.inspectionWeatherVars.optRainMax}
+              value={getRainAmount(
+                props!.state!.settings.inspectionWeatherVars.optRainMax,
+                props!.state!.settings.units
+              )}
               variant="filled"
               onChange={(
                 e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -133,7 +139,11 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
               }
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position="end">mm/3hr</InputAdornment>
+                  <InputAdornment position="end">
+                    {props?.state?.settings.units === "Imperial"
+                      ? "inches/3hr"
+                      : "mm/3hr"}
+                  </InputAdornment>
                 ),
               }}
               type="number"
@@ -166,7 +176,9 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
           </Grid>
         </Grid>
       </If>
-      <If condition={localState.page === "Viable"}>
+      <If
+        condition={localState.page === "Viable" && props?.state !== undefined}
+      >
         <h3>Viable conditions:</h3>
         <p>
           Conditions, which are not optimal, but an inspection could still occur
@@ -224,17 +236,29 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
               id="viable-rain-max"
               label="Maximum viable rain"
               style={{ maxWidth: "15rem" }}
-              value={props?.state?.settings.inspectionWeatherVars.viaRainMax}
+              value={getRainAmount(
+                props!.state!.settings.inspectionWeatherVars.viaRainMax,
+                props!.state!.settings.units
+              )}
               variant="filled"
               onChange={(
                 e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
               ): void | "" =>
                 e.target.value &&
-                updateWeatherVars({ viaRainMax: Number(e.target.value) })
+                updateWeatherVars({
+                  viaRainMax:
+                    props!.state!.settings.units === "Imperial"
+                      ? inchesToMillimeters(Number(e.target.value))
+                      : Number(e.target.value),
+                })
               }
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position="end">mm/3hr</InputAdornment>
+                  <InputAdornment position="end">
+                    {props?.state?.settings.units === "Imperial"
+                      ? "Inches/3hr"
+                      : "mm/3hr"}
+                  </InputAdornment>
                 ),
               }}
               type="number"

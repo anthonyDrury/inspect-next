@@ -3,7 +3,7 @@ import { State, Action } from "../../types/redux.types";
 import { withRouter, RouteComponentProps, Redirect } from "react-router-dom";
 import { Location } from "../../types/location.type";
 import { connect } from "react-redux";
-import { isStateValid } from "../../common/support";
+import { isStateValid, getRainAmount } from "../../common/support";
 import {
   mapFromUrlSafeLocation,
   safeUrlString,
@@ -252,10 +252,18 @@ function DatePage(props?: DatePageProps): JSX.Element {
                 {localState?.weatherPreview?.minWind}
               </p>
               <p className="in-date-view-item__infoText">
-                rain: {`${localState?.weatherPreview?.rainAmount}mm`}
+                rain:{" "}
+                {`${getRainAmount(
+                  localState.weatherPreview?.rainAmount,
+                  props?.state?.settings.units!
+                )}${props?.state?.settings.units === "Imperial" ? "in" : "mm"}`}
               </p>
               <p className="in-date-view-item__infoText">
-                snow: {`${localState?.weatherPreview?.snowAmount}mm`}
+                snow:{" "}
+                {`${getRainAmount(
+                  localState.weatherPreview?.snowAmount,
+                  props?.state?.settings.units!
+                )}${props?.state?.settings.units === "Imperial" ? "in" : "mm"}`}
               </p>
             </Grid>
             <Grid item xs={12}>
