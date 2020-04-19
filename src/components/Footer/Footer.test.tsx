@@ -16,5 +16,8 @@ test("renders Home Link", (): void => {
     </Provider>
   );
   const homeLink = getByText(/Home/i);
+  const emaiText = getByText(/admin@inspectnext.com/i);
+
   expect(homeLink).toBeInTheDocument();
+  expect(emaiText).toBeInTheDocument();
 });

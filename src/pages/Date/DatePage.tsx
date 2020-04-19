@@ -20,7 +20,7 @@ import {
   faCheckCircle,
   faTimesCircle,
 } from "@fortawesome/free-solid-svg-icons";
-import HourInfoTable from "../../components/HourInfoChart/HourInfoTable";
+import HourInfoTable from "../../components/HourInfoTable/HourInfoTable";
 import yellow from "@material-ui/core/colors/yellow";
 import { getWeatherInfo } from "../../common/weather.support";
 
