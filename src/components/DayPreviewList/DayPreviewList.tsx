@@ -21,7 +21,7 @@ function DayPreviewList(props: DayPreviewListProps): JSX.Element {
           (hour: Map<string, WeatherListItem>, index: number): boolean => {
             // prevents partial days from appearing in the list
             // forces today to always show
-            return (hour.has("09") && hour.has("15")) || index !== 0;
+            return (hour.has("09") && hour.has("15")) || index === 0;
           }
         )
         .map(

@@ -48,11 +48,26 @@ function HourInfoTable(props?: HourInfoProps): JSX.Element {
           >
             <div>
               {weatherItem.isOptimal ? (
-                <FontAwesomeIcon size="lg" color="green" icon={faCheckCircle} />
+                <FontAwesomeIcon
+                  size="lg"
+                  color="green"
+                  icon={faCheckCircle}
+                  data-testid="optimal-icon"
+                />
               ) : weatherItem.isViable ? (
-                <FontAwesomeIcon size="lg" color="black" icon={faCheckCircle} />
+                <FontAwesomeIcon
+                  size="lg"
+                  color="black"
+                  icon={faCheckCircle}
+                  data-testid="viable-icon"
+                />
               ) : (
-                <FontAwesomeIcon size="lg" color="red" icon={faTimesCircle} />
+                <FontAwesomeIcon
+                  size="lg"
+                  color="red"
+                  icon={faTimesCircle}
+                  data-testid="inadvisable-icon"
+                />
               )}
             </div>
           </Tooltip>
