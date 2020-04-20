@@ -4,6 +4,7 @@ import React from "react";
 export default function WavyBorder(): JSX.Element {
   return (
     <div
+      data-testid="wavy-border"
       style={{
         backgroundColor: yellow[500],
         position: "relative",
