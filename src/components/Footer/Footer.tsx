@@ -44,7 +44,19 @@ export default function Footer(): JSX.Element {
           </Grid>
           <Grid item>
             <Typography component="p" noWrap>
-              mail: admin@inspectnext.com
+              <a
+                onClick={(
+                  event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+                ): void => {
+                  event.preventDefault();
+                  if (window !== null) {
+                    window.open("mailto:admin@inspectnext.com", "mail");
+                  }
+                }}
+                href="mailto:admin@inspectnext.com"
+              >
+                mail: admin@inspectnext.com
+              </a>
             </Typography>
           </Grid>
         </Grid>
