@@ -10,11 +10,7 @@ import "./SettingsModal.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCog } from "@fortawesome/free-solid-svg-icons";
 import { Modal, Grid, Paper, Fade, Backdrop, Button } from "@material-ui/core";
-import { Settings } from "../../types/app.type";
-import {
-  updateSettings,
-  resetSettings,
-} from "../../redux/actions/settings.actions";
+import { resetSettings } from "../../redux/actions/settings.actions";
 import UnitsMod from "../UnitsMod/UnitsMod";
 import InspectionVarMod from "../InspectionVarMod/InspectionVarMod";
 import { SizeProp } from "@fortawesome/fontawesome-svg-core";
