@@ -5,7 +5,7 @@
 import { createStore, applyMiddleware, Store, compose } from "redux";
 import thunk from "redux-thunk";
 import { initialState } from "../../common/constant";
-import { State } from "../../types/redux.types";
+import { State, Action } from "../../types/redux.types";
 import reducer from "../reducers/reducer";
 
 const composeEnhancers: typeof compose =
@@ -36,7 +36,7 @@ function configureStore(): Store {
   );
 }
 
-const store: Store<State, any> = configureStore();
+const store: Store<State, Action> = configureStore();
 
 store.subscribe((): void => {
   localStorage.setItem(

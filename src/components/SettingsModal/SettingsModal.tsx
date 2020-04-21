@@ -24,7 +24,6 @@ type SettingsModalState = {
   expanded: boolean;
 };
 type SettingsModalProps = {
-  updateSettings?: (d: Settings) => void;
   resetSettings?: () => void;
   state?: State;
   size?: SizeProp;
@@ -41,6 +40,7 @@ function SettingsModal(
   return (
     <>
       <div
+        data-testid="gear-icon"
         style={{
           cursor: "pointer",
           display: "flex",
@@ -73,7 +73,7 @@ function SettingsModal(
             className="settingsModal__modal-container"
             style={{ backgroundColor: grey[100] }}
           >
-            <h2>Settings</h2>
+            <h2 id="settings-modal-header">Settings</h2>
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <UnitsMod />
@@ -83,6 +83,7 @@ function SettingsModal(
               </Grid>
               <Grid item container justify="center" xs={12}>
                 <Button
+                  id="settings-modal-reset"
                   onClick={(): void => {
                     if (props?.resetSettings !== undefined) {
                       props.resetSettings();
@@ -95,6 +96,7 @@ function SettingsModal(
                   reset
                 </Button>
                 <Button
+                  id="settings-modal-close"
                   onClick={(): void => setLocalState({ expanded: false })}
                   color="secondary"
                   className="settingsModal__modal-actions"
@@ -126,7 +128,6 @@ const mapDispatchToProps: (
   ownProps: SettingsModalProps
 ): SettingsModalProps => {
   return {
-    updateSettings: (s: Settings): void => dispatch(updateSettings(s)),
     resetSettings: (): void => dispatch(resetSettings()),
     ...ownProps,
   };
