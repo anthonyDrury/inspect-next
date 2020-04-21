@@ -12,7 +12,11 @@ import { Settings } from "../../types/app.type";
 import { updateSettings } from "../../redux/actions/settings.actions";
 import { WeatherInspectionVariables } from "../../types/weather.type";
 import If from "../If/If";
-import { getRainAmount, inchesToMillimeters } from "../../common/support";
+import {
+  getRainAmount,
+  inchesToMillimeters,
+  isDefined,
+} from "../../common/support";
 
 type InspectionVarModState = {
   page: "Optimal" | "Viable";
@@ -53,6 +57,7 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
         aria-label="contained primary button group"
       >
         <Button
+          data-testid="display-optimal-button"
           variant={localState.page === "Optimal" ? "contained" : "outlined"}
           onClick={(): void =>
             setLocalState({ ...localState, page: "Optimal" })
@@ -61,6 +66,7 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
           Optimal
         </Button>
         <Button
+          data-testid="display-viable-button"
           variant={localState.page === "Viable" ? "contained" : "outlined"}
           onClick={(): void => setLocalState({ ...localState, page: "Viable" })}
         >
@@ -70,7 +76,7 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
       <If
         condition={localState.page === "Optimal" && props?.state !== undefined}
       >
-        <h3>Optimal conditions:</h3>
+        <h3 data-testid="optimal-heading">Optimal conditions:</h3>
         <p>
           Best conditions to hold an inspection, use these days if possible.
         </p>
@@ -84,10 +90,11 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
               variant="filled"
               onChange={(
                 e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-              ): void | "" =>
-                e.target.value &&
-                updateWeatherVars({ optTempMin: Number(e.target.value) })
-              }
+              ): void | "" => {
+                if (isDefined(e.target.value)) {
+                  updateWeatherVars({ optTempMin: Number(e.target.value) });
+                }
+              }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -108,10 +115,11 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
               variant="filled"
               onChange={(
                 e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-              ): void | "" =>
-                e.target.value &&
-                updateWeatherVars({ optTempMax: Number(e.target.value) })
-              }
+              ): void | "" => {
+                if (isDefined(e.target.value)) {
+                  updateWeatherVars({ optTempMax: Number(e.target.value) });
+                }
+              }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -133,10 +141,11 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
               variant="filled"
               onChange={(
                 e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-              ): void | "" =>
-                e.target.value &&
-                updateWeatherVars({ optRainMax: Number(e.target.value) })
-              }
+              ): void | "" => {
+                if (isDefined(e.target.value)) {
+                  updateWeatherVars({ optRainMax: Number(e.target.value) });
+                }
+              }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -158,10 +167,11 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
               variant="filled"
               onChange={(
                 e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-              ): void | "" =>
-                e.target.value &&
-                updateWeatherVars({ optWindMax: Number(e.target.value) })
-              }
+              ): void | "" => {
+                if (isDefined(e.target.value)) {
+                  updateWeatherVars({ optWindMax: Number(e.target.value) });
+                }
+              }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -179,7 +189,7 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
       <If
         condition={localState.page === "Viable" && props?.state !== undefined}
       >
-        <h3>Viable conditions:</h3>
+        <h3 data-testid="viable-heading">Viable conditions:</h3>
         <p>
           Conditions, which are not optimal, but an inspection could still occur
           if needed.
@@ -187,6 +197,7 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
         <Grid container spacing={3}>
           <Grid item container justify="center" xs={12}>
             <TextField
+              data-testid="viable-temp-min"
               id="viable-temp-min"
               label="Minimum viable temp"
               style={{ maxWidth: "15rem" }}
@@ -194,10 +205,11 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
               variant="filled"
               onChange={(
                 e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-              ): void | "" =>
-                e.target.value &&
-                updateWeatherVars({ viaTempMin: Number(e.target.value) })
-              }
+              ): void | "" => {
+                if (isDefined(e.target.value)) {
+                  updateWeatherVars({ viaTempMin: Number(e.target.value) });
+                }
+              }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -218,10 +230,11 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
               value={props?.state?.settings.inspectionWeatherVars.viaTempMax}
               onChange={(
                 e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-              ): void | "" =>
-                e.target.value &&
-                updateWeatherVars({ viaTempMax: Number(e.target.value) })
-              }
+              ): void | "" => {
+                if (isDefined(e.target.value)) {
+                  updateWeatherVars({ viaTempMax: Number(e.target.value) });
+                }
+              }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -243,15 +256,16 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
               variant="filled"
               onChange={(
                 e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-              ): void | "" =>
-                e.target.value &&
-                updateWeatherVars({
-                  viaRainMax:
-                    props!.state!.settings.units === "Imperial"
-                      ? inchesToMillimeters(Number(e.target.value))
-                      : Number(e.target.value),
-                })
-              }
+              ): void | "" => {
+                if (isDefined(e.target.value)) {
+                  updateWeatherVars({
+                    viaRainMax:
+                      props!.state!.settings.units === "Imperial"
+                        ? inchesToMillimeters(Number(e.target.value))
+                        : Number(e.target.value),
+                  });
+                }
+              }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -273,10 +287,11 @@ function InspectionVarMod(props?: InspectionVarModProps): JSX.Element {
               variant="filled"
               onChange={(
                 e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-              ): void | "" =>
-                e.target.value &&
-                updateWeatherVars({ viaWindMax: Number(e.target.value) })
-              }
+              ): void | "" => {
+                if (isDefined(e.target.value)) {
+                  updateWeatherVars({ viaWindMax: Number(e.target.value) });
+                }
+              }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">

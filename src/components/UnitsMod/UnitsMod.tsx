@@ -29,12 +29,14 @@ function UnitsMod(props?: UnitsModProps): JSX.Element {
       }}
     >
       <FormControlLabel
+        data-testid="imperial-unit"
         value="Imperial"
         checked={props?.state?.settings.units === "Imperial"}
         control={<Radio />}
         label="Imperial"
       />
       <FormControlLabel
+        data-testid="metric-unit"
         checked={props?.state?.settings.units === "Metric"}
         value="Metric"
         control={<Radio />}
