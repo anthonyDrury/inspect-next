@@ -33,3 +33,8 @@ I host the Front End through AWS Amplify, which takes care of my Continuous Inte
 One of the main challenges I face is SEO, which I plan to solve in the future by changing this project to be `server-side rendered`, though I have no time frame for completion of this.
 
 In closing, I utilized `React, Redux, SCSS, Typescript` to create a quick and responsive UI to modify weather data to assist beekeepers in choosing the best times to inspect their beehives.
+
+## Technology Used
+
+Cut the chat, right to brass tacks.
+`React, Redux, SCSS, CSS, React-Router, Jest, Typescript, Javascript, HTML`
